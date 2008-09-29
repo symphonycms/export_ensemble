@@ -1,0 +1,19 @@
+Advanced Ensemble Export
+------------------------------------
+
+Version: 1.0
+Author: Alistair Kearney (alistair@symphony21.com)
+Build Date: 30th Sept 2008
+Requirements: Latest Symphony 2 Beta, ZIP enabled (--enable-zip)
+
+This extension is a replacement for the built in Ensemble export feature of Symphony 2. It uses the ZIP module of PHP, and as such is memory efficient and should allow for much larger sites to be exported without the need for increasing PHP's memory limit.
+
+
+
+[INSTALLATION]
+
+** Note: The latest version can alway be grabbed with "git clone git://github.com/pointybeard/advanced_export_ensemble.git"
+
+1. Upload the 'advanced_export_ensemble' folder in this archive to your Symphony 'extensions' folder.
+
+2. Enable it by selecting the "Advanced Ensemble Export", choose Enable from the with-selected menu, then click Apply.
