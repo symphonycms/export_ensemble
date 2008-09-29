@@ -1,6 +1,6 @@
 <?php
 
-	Class extension_advanced_export_ensemble extends Extension{
+	Class extension_advanced_ensemble_export extends Extension{
 
 		public function about(){
 			return array('name' => 'Advanced Ensemble Export',
