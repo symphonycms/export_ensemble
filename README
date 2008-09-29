@@ -8,6 +8,7 @@ Requirements: Latest Symphony 2 Beta, ZIP enabled (--enable-zip)
 
 This extension is a replacement for the built in Ensemble export feature of Symphony 2. It uses the ZIP module of PHP, and as such is memory efficient and should allow for much larger sites to be exported without the need for increasing PHP's memory limit.
 
+Currently this extension adds an identical "Create Ensemble" button to the preferences page. In the future it will instead have its own interface with options for including additional files and folders as well as excluding and other options.
 
 
 [INSTALLATION]
