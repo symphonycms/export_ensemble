@@ -1,9 +1,9 @@
 <?php
 
-	Class extension_advanced_ensemble_export extends Extension{
+	Class extension_export_ensemble extends Extension{
 
 		public function about(){
-			return array('name' => 'Advanced Ensemble Export',
+			return array('name' => 'Export Ensemble',
 						 'version' => '1.0',
 						 'release-date' => '2008-09-30',
 						 'author' => array('name' => 'Alistair Kearney',
@@ -45,7 +45,7 @@
 		private function __export(){
 			$sql_schema = $sql_data = NULL;
 			
-			require_once(TOOLKIT . '/class.mysqldump.php');
+			require_once(dirname(__FILE__) . '/lib/class.mysqldump.php');
 			
 			$dump = new MySQLDump($this->_Parent->Database);
 
@@ -165,18 +165,18 @@
 		
 		public function appendPreferences($context){
 			
-			if(isset($_POST['action']['export-advanced'])){
+			if(isset($_POST['action']['export'])){
 				$this->__SavePreferences($context);
 			}
 			
 			$group = new XMLElement('fieldset');
 			$group->setAttribute('class', 'settings');
-			$group->appendChild(new XMLElement('legend', 'Export Ensemble - Advanced'));			
+			$group->appendChild(new XMLElement('legend', 'Export Ensemble'));			
 			
 
 			$div = new XMLElement('div', NULL, array('id' => 'file-actions', 'class' => 'label'));			
 			$span = new XMLElement('span');
-			$span->appendChild(new XMLElement('button', 'Create Ensemble', array('name' => 'action[export-advanced]', 'type' => 'submit')));
+			$span->appendChild(new XMLElement('button', 'Create', array('name' => 'action[export]', 'type' => 'submit')));
 			$div->appendChild($span);
 
 			$div->appendChild(new XMLElement('p', 'Packages entire site as a <code>.zip</code> archive for download.', array('class' => 'help')));	
