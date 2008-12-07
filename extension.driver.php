@@ -29,6 +29,11 @@
 					);
 		}
 		
+		public function install(){
+			$this->_Parent->Page->pageAlert('Export Ensemble cannot be installed, since the "<a href="http://php.net/manual/en/book.zip.php">ZipArchive</a>" class is not available. Ensure that PHP was compiled with the <code>--enable-zip</code> flag.', AdministrationPage::PAGE_ALERT_ERROR);
+			return false;
+		}
+		
 		private function __addFolderToArchive(&$archive, $path, $parent=NULL){
 			$iterator = new DirectoryIterator($path);
 			foreach($iterator as $file){
@@ -176,7 +181,14 @@
 
 			$div = new XMLElement('div', NULL, array('id' => 'file-actions', 'class' => 'label'));			
 			$span = new XMLElement('span');
-			$span->appendChild(new XMLElement('button', 'Create', array('name' => 'action[export]', 'type' => 'submit')));
+			
+			if(!class_exists('ZipArchive')){
+				$span->appendChild(new XMLElement('p', '<strong>Warning: It appears you do not have the "ZipArchive" class available. Ensure that PHP was compiled with <code>--enable-zip</code>'));
+			}
+			else{
+				$span->appendChild(new XMLElement('button', 'Create', array('name' => 'action[export]', 'type' => 'submit')));	
+			}
+			
 			$div->appendChild($span);
 
 			$div->appendChild(new XMLElement('p', 'Packages entire site as a <code>.zip</code> archive for download.', array('class' => 'help')));	
