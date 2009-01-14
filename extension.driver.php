@@ -130,7 +130,7 @@
 										trim($config_string),										
 									),
 				
-									file_get_contents(TEMPLATE . '/installer.tpl')
+									file_get_contents(dirname(__FILE__) . '/lib/installer.tpl')
 			);
 			
 			$archive = new ZipArchive;
