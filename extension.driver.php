@@ -4,8 +4,8 @@
 
 		public function about(){
 			return array('name' => 'Export Ensemble',
-						 'version' => '1.0',
-						 'release-date' => '2008-09-30',
+						 'version' => '1.1',
+						 'release-date' => '2009-01-14',
 						 'author' => array('name' => 'Alistair Kearney',
 										   'website' => 'http://pointybeard.com',
 										   'email' => 'alistair@pointybeard.com')
@@ -19,13 +19,7 @@
 							'delegate' => 'AddCustomPreferenceFieldsets',
 							'callback' => 'appendPreferences'
 						),
-						
-						/*array(
-							'page' => '/system/preferences/',
-							'delegate' => 'Save',
-							'callback' => '__SavePreferences'
-						),	*/					
-						
+
 					);
 		}
 		
