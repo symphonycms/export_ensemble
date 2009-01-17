@@ -4,8 +4,8 @@
 
 		public function about(){
 			return array('name' => 'Export Ensemble',
-						 'version' => '1.1',
-						 'release-date' => '2009-01-14',
+						 'version' => '1.2',
+						 'release-date' => '2009-01-17',
 						 'author' => array('name' => 'Alistair Kearney',
 										   'website' => 'http://pointybeard.com',
 										   'email' => 'alistair@pointybeard.com')
@@ -24,8 +24,13 @@
 		}
 		
 		public function install(){
-			$this->_Parent->Page->pageAlert('Export Ensemble cannot be installed, since the "<a href="http://php.net/manual/en/book.zip.php">ZipArchive</a>" class is not available. Ensure that PHP was compiled with the <code>--enable-zip</code> flag.', AdministrationPage::PAGE_ALERT_ERROR);
-			return false;
+			
+			if(!class_exists('ZipArchive')){
+				$this->_Parent->Page->pageAlert('Export Ensemble cannot be installed, since the "<a href="http://php.net/manual/en/book.zip.php">ZipArchive</a>" class is not available. Ensure that PHP was compiled with the <code>--enable-zip</code> flag.', AdministrationPage::PAGE_ALERT_ERROR);
+				return false;
+			}
+			
+			return true;
 		}
 		
 		private function __addFolderToArchive(&$archive, $path, $parent=NULL){

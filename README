@@ -1,9 +1,9 @@
 Export Ensemble
 ------------------------------------
 
-Version: 1.1
+Version: 1.2
 Author: Alistair Kearney (alistair@symphony21.com)
-Build Date: 14th Jan 2009
+Build Date: 17th Jan 2009
 Requirements: Latest Symphony 2 build, ZIP enabled (--enable-zip)
 
 This is a replacement for the Symphony 2 Beta "Create Ensemble" feature, cut from the final Symphony 2 release.
@@ -25,5 +25,7 @@ interface with options for including additional files and folders as well as exc
 
 
 [CHANGE LOG]
+
+1.2 - install() function properly checks for the ZipArchive class and returns true if found, allowing installation
 
 1.1 - Moved "installer.tpl", found in the main S2 repository, into the /lib folder
