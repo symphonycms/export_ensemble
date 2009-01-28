@@ -4,8 +4,8 @@
 
 		public function about(){
 			return array('name' => 'Export Ensemble',
-						 'version' => '1.3',
-						 'release-date' => '2009-01-27',
+						 'version' => '1.4',
+						 'release-date' => '2009-01-28',
 						 'author' => array('name' => 'Alistair Kearney',
 										   'website' => 'http://pointybeard.com',
 										   'email' => 'alistair@pointybeard.com')
@@ -117,6 +117,7 @@
 				
 									array(
 										'<!-- BUILD -->',
+										'<!-- VERSION -->',
 										'<!-- ENCODED SQL SCHEMA DUMP -->',
 										'<!-- ENCODED SQL DATA DUMP -->',
 										'<!-- CONFIGURATION -->'
@@ -124,6 +125,7 @@
 				
 									array(
 										$this->_Parent->Configuration->get('build', 'symphony'),
+										$this->_Parent->Configuration->get('version', 'symphony'),	
 										base64_encode($sql_schema),
 										base64_encode($sql_data),
 										trim($config_string),										
