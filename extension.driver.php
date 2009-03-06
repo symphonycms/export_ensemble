@@ -4,8 +4,8 @@
 
 		public function about(){
 			return array('name' => 'Export Ensemble',
-						 'version' => '1.4',
-						 'release-date' => '2009-01-28',
+						 'version' => '1.5',
+						 'release-date' => '2009-03-06',
 						 'author' => array('name' => 'Alistair Kearney',
 										   'website' => 'http://pointybeard.com',
 										   'email' => 'alistair@pointybeard.com')
@@ -142,8 +142,8 @@
 				$archive->addFromString('install.php', $install_template);
 				$archive->addFile(DOCROOT . '/index.php', 'index.php');
 				
-				if(is_file(DOCROOT . '/README.txt')) $archive->addFile(DOCROOT . '/README.txt', 'README.txt');
-				if(is_file(DOCROOT . '/LICENCE.txt')) $archive->addFile(DOCROOT . '/LICENCE.txt', 'LICENCE.txt');
+				if(is_file(DOCROOT . '/README')) $archive->addFile(DOCROOT . '/README', 'README');
+				if(is_file(DOCROOT . '/LICENCE')) $archive->addFile(DOCROOT . '/LICENCE', 'LICENCE');
 				if(is_file(DOCROOT . '/update.php')) $archive->addFile(DOCROOT . '/update.php', 'update.php');
 				
 				$this->__addFolderToArchive($archive, EXTENSIONS, DOCROOT);
