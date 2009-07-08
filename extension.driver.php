@@ -4,8 +4,8 @@
 
 		public function about(){
 			return array('name' => 'Export Ensemble',
-						 'version' => '1.5',
-						 'release-date' => '2009-03-06',
+						 'version' => '1.6',
+						 'release-date' => '2009-07-08',
 						 'author' => array('name' => 'Alistair Kearney',
 										   'website' => 'http://pointybeard.com',
 										   'email' => 'alistair@pointybeard.com')
@@ -118,16 +118,16 @@
 									array(
 										'<!-- BUILD -->',
 										'<!-- VERSION -->',
-										'<!-- ENCODED SQL SCHEMA DUMP -->',
-										'<!-- ENCODED SQL DATA DUMP -->',
+										//'<!-- ENCODED SQL SCHEMA DUMP -->',
+										//'<!-- ENCODED SQL DATA DUMP -->',
 										'<!-- CONFIGURATION -->'
 									),
 				
 									array(
 										$this->_Parent->Configuration->get('build', 'symphony'),
 										$this->_Parent->Configuration->get('version', 'symphony'),	
-										base64_encode($sql_schema),
-										base64_encode($sql_data),
+										//base64_encode($sql_schema),
+										//base64_encode($sql_data),
 										trim($config_string),										
 									),
 				
@@ -140,6 +140,9 @@
 			if ($res === TRUE) {
 				
 				$archive->addFromString('install.php', $install_template);
+				$archive->addFromString('install.sql', $sql_schema);
+				$archive->addFromString('workspace/install.sql', $sql_data);
+				
 				$archive->addFile(DOCROOT . '/index.php', 'index.php');
 				
 				if(is_file(DOCROOT . '/README')) $archive->addFile(DOCROOT . '/README', 'README');
