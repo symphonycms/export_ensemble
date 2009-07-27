@@ -4,7 +4,7 @@
 
 		public function about(){
 			return array('name' => 'Export Ensemble',
-						 'version' => '1.7',
+						 'version' => '1.8',
 						 'release-date' => '2009-07-27',
 						 'author' => array('name' => 'Alistair Kearney',
 										   'website' => 'http://pointybeard.com',
@@ -144,6 +144,13 @@
 				$archive->addFromString('workspace/install.sql', $sql_data);
 				
 				$archive->addFile(DOCROOT . '/index.php', 'index.php');
+				
+				$readme_files = glob(DOCROOT . '/README.*');
+				if(is_array($readme_files) && !empty($readme_files)){
+					foreach($readme_files as $filename){
+						$archive->addFile($filename, basename($filename));	
+					}
+				}
 				
 				if(is_file(DOCROOT . '/README')) $archive->addFile(DOCROOT . '/README', 'README');
 				if(is_file(DOCROOT . '/LICENCE')) $archive->addFile(DOCROOT . '/LICENCE', 'LICENCE');

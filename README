@@ -1,7 +1,7 @@
 Export Ensemble
 ------------------------------------
 
-Version: 1.7
+Version: 1.8
 Author: Alistair Kearney (alistair@symphony21.com)
 Build Date: 27th July 2009
 Requirements: Latest Symphony 2 build, ZIP enabled (--enable-zip)
@@ -25,6 +25,8 @@ interface with options for including additional files and folders as well as exc
 
 
 [CHANGE LOG]
+
+1.8 - Any file that matches '/README.*' will be added to the archive along with '/README' if it exists.
 
 1.7 - Fixed order in which items are added to the zip so the new 'workspace/install.sql' file overrides any existing one
 
