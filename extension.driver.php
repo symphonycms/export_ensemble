@@ -51,7 +51,7 @@
 			
 			require_once(dirname(__FILE__) . '/lib/class.mysqldump.php');
 			
-			$dump = new MySQLDump($this->_Parent->Database);
+			$dump = new MySQLDump(Symphony::Database());
 
 			$tables = array(
 				'tbl_authors',
@@ -70,7 +70,7 @@
 			
 			## Grab the schema
 			foreach($tables as $t) $sql_schema .= $dump->export($t, MySQLDump::STRUCTURE_ONLY);
-			$sql_schema = str_replace('`' . $this->_Parent->Configuration->get('tbl_prefix', 'database'), '`tbl_', $sql_schema);
+			$sql_schema = str_replace('`' . Administration::instance()->Configuration->get('tbl_prefix', 'database'), '`tbl_', $sql_schema);
 			
 			$sql_schema = preg_replace('/AUTO_INCREMENT=\d+/i', '', $sql_schema);
 			
@@ -91,10 +91,10 @@
 			
 			## Grab the data
 			foreach($tables as $t) $sql_data .= $dump->export($t, MySQLDump::DATA_ONLY);
-			$sql_data = str_replace('`' . $this->_Parent->Configuration->get('tbl_prefix', 'database'), '`tbl_', $sql_data);
+			$sql_data = str_replace('`' . Administration::instance()->Configuration->get('tbl_prefix', 'database'), '`tbl_', $sql_data);
 			
 			$config_string = NULL;
-			$config = $this->_Parent->Configuration->get();	
+			$config = Administration::instance()->Configuration->get();	
 			
 			unset($config['symphony']['build']);
 			unset($config['symphony']['cookie_prefix']);
@@ -118,16 +118,12 @@
 									array(
 										'<!-- BUILD -->',
 										'<!-- VERSION -->',
-										//'<!-- ENCODED SQL SCHEMA DUMP -->',
-										//'<!-- ENCODED SQL DATA DUMP -->',
 										'<!-- CONFIGURATION -->'
 									),
 				
 									array(
-										$this->_Parent->Configuration->get('build', 'symphony'),
-										$this->_Parent->Configuration->get('version', 'symphony'),	
-										//base64_encode($sql_schema),
-										//base64_encode($sql_data),
+										Administration::instance()->Configuration->get('build', 'symphony'),
+										Administration::instance()->Configuration->get('version', 'symphony'),
 										trim($config_string),										
 									),
 				
@@ -136,8 +132,12 @@
 			
 			$archive = new ZipArchive;
 			$res = $archive->open(TMP . '/ensemble.tmp.zip', ZipArchive::CREATE);
-			
+
 			if ($res === TRUE) {
+				
+				$this->__addFolderToArchive($archive, EXTENSIONS, DOCROOT);
+				$this->__addFolderToArchive($archive, SYMPHONY, DOCROOT);
+				$this->__addFolderToArchive($archive, WORKSPACE, DOCROOT);
 				
 				$archive->addFromString('install.php', $install_template);
 				$archive->addFromString('install.sql', $sql_schema);
@@ -148,11 +148,7 @@
 				if(is_file(DOCROOT . '/README')) $archive->addFile(DOCROOT . '/README', 'README');
 				if(is_file(DOCROOT . '/LICENCE')) $archive->addFile(DOCROOT . '/LICENCE', 'LICENCE');
 				if(is_file(DOCROOT . '/update.php')) $archive->addFile(DOCROOT . '/update.php', 'update.php');
-				
-				$this->__addFolderToArchive($archive, EXTENSIONS, DOCROOT);
-				$this->__addFolderToArchive($archive, SYMPHONY, DOCROOT);
-				$this->__addFolderToArchive($archive, WORKSPACE, DOCROOT);				
-		
+					
 			}
 			
 			$archive->close();
