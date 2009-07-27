@@ -1,9 +1,9 @@
 Export Ensemble
 ------------------------------------
 
-Version: 1.6
+Version: 1.7
 Author: Alistair Kearney (alistair@symphony21.com)
-Build Date: 8th July 2009
+Build Date: 27th July 2009
 Requirements: Latest Symphony 2 build, ZIP enabled (--enable-zip)
 
 This is a replacement for the Symphony 2 Beta "Create Ensemble" feature, cut from the final Symphony 2 release.
@@ -25,6 +25,8 @@ interface with options for including additional files and folders as well as exc
 
 
 [CHANGE LOG]
+
+1.7 - Fixed order in which items are added to the zip so the new 'workspace/install.sql' file overrides any existing one
 
 1.6 - Creates separate SQL files. install.sql and workspace/install.sql
 
