@@ -1,18 +1,23 @@
 Export Ensemble
 ------------------------------------
 
-Version: 1.8
+Version: 1.9
 Author: Alistair Kearney (alistair@symphony21.com)
-Build Date: 27th July 2009
-Requirements: Latest Symphony 2 build, ZIP enabled (--enable-zip)
+Build Date: 28th July 2009
+Requirements: Symphony 2.0.x, ZIP enabled (--enable-zip)
 
-This is a replacement for the Symphony 2 Beta "Create Ensemble" feature, cut from the final Symphony 2 release.
+This extension will export your website, creating an installable version useful
+for distribution. The resultant archive contains install.php, install.sql and 
+workspace/install.sql files. This is how all official Symphony releases are 
+created.
 
-It uses the ZIP module of PHP, and as such is memory efficient and should allow for much larger sites to be exported 
-without the need for increasing PHP's memory limit.
+The ZIP module of PHP is utilised, and is memory efficient, allowing
+for larger sites to be exported without the need for increasing PHP's 
+memory limit.
 
-Currently this extension adds a "Create" button to the preferences page. In the future it will instead have its own 
-interface with options for including additional files and folders as well as excluding and other options.
+Currently this extension adds a "Create" button to the preferences page. In the 
+future it will instead have its own interface with options for including 
+additional files and folders as well as excluding and other options.
 
 
 [INSTALLATION]
@@ -25,6 +30,9 @@ interface with options for including additional files and folders as well as exc
 
 
 [CHANGE LOG]
+
+1.9 - Misc code cleanup
+	- Minor changes to ensure compatibility with PHP v5.3.x
 
 1.8 - Any file that matches '/README.*' will be added to the archive along with '/README' if it exists.
 
