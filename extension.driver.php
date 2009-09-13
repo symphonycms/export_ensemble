@@ -197,7 +197,7 @@
 			
 			$group = new XMLElement('fieldset');
 			$group->setAttribute('class', 'settings');
-			$group->appendChild(new XMLElement('legend', 'Export Ensemble'));			
+			$group->appendChild(new XMLElement('legend', __('Export Ensemble')));			
 			
 
 			$div = new XMLElement('div', NULL, array('id' => 'file-actions', 'class' => 'label'));			
@@ -205,16 +205,16 @@
 			
 			if(!class_exists('ZipArchive')){
 				$span->appendChild(
-					new XMLElement('p', '<strong>Warning: It appears you do not have the "ZipArchive" class available. Ensure that PHP was compiled with <code>--enable-zip</code>')
+					new XMLElement('p', '<strong>' . __('Warning: It appears you do not have the "ZipArchive" class available. Ensure that PHP was compiled with <code>--enable-zip</code>') . '<strong>')
 				);
 			}
 			else{
-				$span->appendChild(new XMLElement('button', 'Create', array('name' => 'action[export]', 'type' => 'submit')));	
+				$span->appendChild(new XMLElement('button', __('Create'), array('name' => 'action[export]', 'type' => 'submit')));	
 			}
 			
 			$div->appendChild($span);
 
-			$div->appendChild(new XMLElement('p', 'Packages entire site as a <code>.zip</code> archive for download.', array('class' => 'help')));	
+			$div->appendChild(new XMLElement('p', __('Packages entire site as a <code>.zip</code> archive for download.'), array('class' => 'help')));	
 
 			$group->appendChild($div);						
 			$context['wrapper']->appendChild($group);
