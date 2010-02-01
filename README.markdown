@@ -4,7 +4,7 @@ This extension exports your Symphony website.
 It is part of the Symphony core download package.
 
 - Version: 1.10
-- Date: **unreleased**
+- Date: 2nd Feb 2010
 - Requirements: Symphony 2.0.x, ZIP enabled (--enable-zip)
 - Author: Alistair Kearney, alistair@symphony-cms.com
 - Constributors: [A list of contributors can be found in the commit history](http://github.com/pointybeard/export_ensemble/commits/master)
