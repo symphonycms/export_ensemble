@@ -42,4 +42,4 @@
 		'Warning: It appears you do not have the "ZipArchive" class available. Ensure that PHP was compiled with <code>--enable-zip</code>' => 
 		'Предупреждение: Судя по всему у вас не доступен класс "ZipArchive". Убедитесь, что PHP был скомпилирован с параметром <code>--enable-zip</code>.'
  
-	)
+	);
