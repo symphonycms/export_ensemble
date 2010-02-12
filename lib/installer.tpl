@@ -66,13 +66,13 @@
 		}
 
 		try{
-			Lang::init('./symphony/lib/lang/lang.%s.php', $lang);
+			Lang::load('./symphony/lib/lang/lang.%s.php', $lang);
 		}
 		catch(Exception $s){
 			return NULL;
 		}
 
-		define('__LANG__', $lang);
+		define('Symphony::lang()', $lang);
 		return $lang;
 	}
 
