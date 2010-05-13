@@ -5,7 +5,6 @@
 		const DATA_ONLY = 1;
 		const STRUCTURE_ONLY = 2;
 		const ALL = 3;
-		const CRLF = "\r\n";
 
 		private $_connection;
 	
@@ -20,20 +19,20 @@
 			foreach ($tables as $name => $info){
 			
 				if($flag == self::ALL || $flag == self::STRUCTURE_ONLY){
-					$data .= self::CRLF . "-- *** STRUCTURE: `{$name}` ***" . self::CRLF;
-					$data .= "DROP TABLE IF EXISTS `{$name}`;" . self::CRLF;
+					$data .= PHP_EOL . "-- *** STRUCTURE: `{$name}` ***" . PHP_EOL;
+					$data .= "DROP TABLE IF EXISTS `{$name}`;" . PHP_EOL;
 					$data .= $this->__dumpTableSQL($name, $info['type'], $info['fields'], $info['indexes']);
 				}
 			
 				if($flag == self::ALL || $flag == self::DATA_ONLY){
-					$data .= self::CRLF . "-- *** DATA: `$name` ***" . self::CRLF;
+					$data .= PHP_EOL . "-- *** DATA: `$name` ***" . PHP_EOL;
 					if(strtoupper($info['type']) == 'INNODB'){
-						$data .= 'SET FOREIGN_KEY_CHECKS = 0;' . self::CRLF;
+						$data .= 'SET FOREIGN_KEY_CHECKS = 0;' . PHP_EOL;
 					}
 				
 					$data .= $this->__dumpTableData ($name, $info['fields'], $condition);
 					if(strtoupper($info['type']) == 'INNODB'){
-						$data .= 'SET FOREIGN_KEY_CHECKS = 1;' . self::CRLF;
+						$data .= 'SET FOREIGN_KEY_CHECKS = 1;' . PHP_EOL;
 					}
 				}
 			}
@@ -80,7 +79,7 @@
 					}
 				}
 
-				$value .= join (', ', $fieldValues) . ");" . self::CRLF;
+				$value .= join (', ', $fieldValues) . ");" . PHP_EOL;
 
 			}
 
@@ -92,7 +91,7 @@
 			$query = "SHOW CREATE TABLE `{$table}`";
 			$result = $this->_connection->fetch($query);
 			$result = array_values($result[0]);
-			return $result[1] . ";" . self::CRLF;
+			return $result[1] . ";" . PHP_EOL;
 		}
 
 		private function __getTables($match=null){

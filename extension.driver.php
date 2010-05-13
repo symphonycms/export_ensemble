@@ -1,12 +1,12 @@
 <?php
 
-	Class extension_export_ensemble extends Extension{
+	Class extension_export_ensemble implements iExtension{
 
 		public function about(){
-			return array('name' => 'Export Ensemble',
+			return (object)array('name' => 'Export Ensemble',
 						 'version' => '1.11',
 						 'release-date' => '2010-02-12',
-						 'author' => array('name' => 'Alistair Kearney',
+						 'author' => (object)array('name' => 'Alistair Kearney',
 										   'website' => 'http://pointybeard.com',
 										   'email' => 'alistair@pointybeard.com')
 				 		);
@@ -15,8 +15,8 @@
 		public function getSubscribedDelegates(){
 			return array(
 						array(
-							'page' => '/system/preferences/',
-							'delegate' => 'AddCustomPreferenceFieldsets',
+							'page' => '/system/settings/',
+							'delegate' => 'AddCustomToolFieldsets',
 							'callback' => 'appendPreferences'
 						),
 
@@ -101,9 +101,8 @@
 			
 			unset($config['symphony']['build']);
 			unset($config['symphony']['cookie_prefix']);
-			unset($config['general']['useragent']);
-			unset($config['file']['write_mode']);
-			unset($config['directory']['write_mode']);
+			unset($config['symphony']['file_write_mode']);
+			unset($config['symphony']['directory_write_mode']);
 			unset($config['database']['host']);
 			unset($config['database']['port']);
 			unset($config['database']['user']);
@@ -114,7 +113,7 @@
 
 			foreach($config as $group => $set){
 				foreach($set as $key => $val){
-					$config_string .= "		\$conf['{$group}']['{$key}'] = '{$val}';" . self::CRLF;
+					$config_string .= "		\$conf['{$group}']['{$key}'] = '{$val}';" . PHP_EOL;
 				}
 			}
 			
@@ -172,7 +171,7 @@
 				sprintf(
 					'Content-disposition: attachment; filename=%s-ensemble.zip', 
 					Lang::createFilename(
-						Administration::instance()->Configuration->get('sitename', 'general')
+						Administration::instance()->Configuration->get('sitename', 'symphony')
 					)
 				)
 			);
@@ -221,3 +220,5 @@
 						
 		}
 	}
+	
+	return 'extension_export_ensemble';
