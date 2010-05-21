@@ -6,38 +6,68 @@
 		const STRUCTURE_ONLY = 2;
 		const ALL = 3;
 
-		private $_connection;
+		private $connection;
 	
-		public function __construct(MySQL $connection){
-			$this->_connection = $connection;
+		public function __construct(Database $connection){
+			$this->connection = $connection;
 		}
+		
+		public function listTables($match=NULL, $include_addional_information=true){
+			$query = 'SHOW TABLES' . (!is_null($match) ? " LIKE '{$match}'" : NULL);
 
-		public function export($match=null, $flag=self::ALL, $condition=NULL){
-			$data = NULL;
+			$rows = $this->connection->query(str_replace('%', '%%', $query));
+			$rows->resultOutput = DatabaseResultIterator::RESULT_ARRAY;
 
-			$tables = $this->__getTables($match);
+			$result = array();
+
+			foreach ($rows as $item){
+				$table = current(array_values($item));
+				if($include_addional_information === true){
+					$result[$table]            = array();
+					$result[$table]['fields']  = $this->__getTableFields($table);
+					$result[$table]['indexes'] = $this->__getTableIndexes($table);
+					$result[$table]['type']    = $this->__getTableType($table);
+				}
+				else{
+					$result[] = $table;
+				}
+			}
+
+			return $result;
+		}
+		
+		public function export($match=NULL, $flag=self::ALL, $condition=NULL){
+			$result = NULL;
+
+			$tables = $this->listTables($match);
+
 			foreach ($tables as $name => $info){
 			
 				if($flag == self::ALL || $flag == self::STRUCTURE_ONLY){
-					$data .= PHP_EOL . "-- *** STRUCTURE: `{$name}` ***" . PHP_EOL;
-					$data .= "DROP TABLE IF EXISTS `{$name}`;" . PHP_EOL;
-					$data .= $this->__dumpTableSQL($name, $info['type'], $info['fields'], $info['indexes']);
+					$result .= PHP_EOL . "-- *** STRUCTURE: `{$name}` ***" . PHP_EOL;
+					$result .= "DROP TABLE IF EXISTS `{$name}`;" . PHP_EOL;
+					$result .= $this->__dumpTableSQL($name, $info['type'], $info['fields'], $info['indexes']);
 				}
 			
 				if($flag == self::ALL || $flag == self::DATA_ONLY){
-					$data .= PHP_EOL . "-- *** DATA: `$name` ***" . PHP_EOL;
+					
+					$data = $this->__dumpTableData ($name, $info['fields'], $condition);
+					if(strlen(trim($data)) == 0) continue;
+					
+					$result .= PHP_EOL . "-- *** DATA: `{$name}` ***" . PHP_EOL;
 					if(strtoupper($info['type']) == 'INNODB'){
-						$data .= 'SET FOREIGN_KEY_CHECKS = 0;' . PHP_EOL;
+						$result .= 'SET FOREIGN_KEY_CHECKS = 0;' . PHP_EOL;
 					}
-				
-					$data .= $this->__dumpTableData ($name, $info['fields'], $condition);
+					
+					$result .= $data;
+					
 					if(strtoupper($info['type']) == 'INNODB'){
-						$data .= 'SET FOREIGN_KEY_CHECKS = 1;' . PHP_EOL;
+						$result .= 'SET FOREIGN_KEY_CHECKS = 1;' . PHP_EOL;
 					}
 				}
 			}
 
-			return $data;
+			return $result;
 		}
 	
 		private function __dumpTableData($name, $fields, $condition=NULL){
@@ -49,18 +79,18 @@
 				$query .= ' WHERE ' . $condition;
 			}
 			
-			$rows = $this->_connection->fetch ($query);
+			$rows = $this->connection->query($query);
 
 			$value = NULL;
 
-			if(!is_array($rows) || empty($rows)) return NULL;
+			if($rows->length() <= 0) return NULL;
 
 			foreach ($rows as $row){
 				$value .= "INSERT INTO `{$name}` ({$fieldList}) VALUES (";
 				$fieldValues = array();
 			
 				foreach ($fields as $fieldName => $info){
-					$fieldValue = $row[$fieldName];
+					$fieldValue = $row->$fieldName;
 
 					if($info['null'] == 1 && strlen(trim($fieldValue)) == 0){
 						$fieldValues[] = 'NULL';
@@ -89,47 +119,30 @@
 		private function __dumpTableSQL($table, $type, $fields, $indexes){
 
 			$query = "SHOW CREATE TABLE `{$table}`";
-			$result = $this->_connection->fetch($query);
-			$result = array_values($result[0]);
+			$result = $this->connection->query($query);
+			$result->resultOutput = DatabaseResultIterator::RESULT_ARRAY;
+
+			$result = array_values($result->current());
 			return $result[1] . ";" . PHP_EOL;
 		}
-
-		private function __getTables($match=null){
-			$query = 'SHOW TABLES' . (!is_null($match) ? " LIKE '$match'" : NULL);
 		
-			$rows = $this->_connection->fetch ($query);
-			$rows = array_map (create_function ('$x', 'return array_values ($x);'), $rows);
-			$tables = array_map (create_function ('$x', 'return $x[0];'), $rows);
-
-			$result = array();
-
-			foreach ($tables as $table){
-				$result[$table]            = array();
-				$result[$table]['fields']  = $this->__getTableFields ($table);
-				$result[$table]['indexes'] = $this->__getTableIndexes ($table);
-				$result[$table]['type']    = $this->__getTableType ($table);
-			}
-
-			return $result;
-		}
-
 		private function __getTableType($table){
 			$query = sprintf("SHOW TABLE STATUS LIKE '%s'", addslashes($table));
-			$info = $this->_connection->fetch ($query);
-			return $info[0]['Type'];
+			$info = $this->connection->query($query);
+			return $info->current()->Type;
 		}
 
 		private function __getTableFields($table){
 			$result = array();
 			$query  = "DESC `{$table}`";
-			$fields = $this->_connection->fetch($query);
+			$fields = $this->connection->query($query);
 
 			foreach ($fields as $field){
-				$name    = $field['Field'];
-				$type    = $field['Type'];
-				$null    = (strtoupper ($field['Null']) == 'YES');
-				$default = $field['Default'];
-				$extra   = $field['Extra'];
+				$name    = $field->Field;
+				$type    = $field->Type;
+				$null    = (strtoupper($field->Null) == 'YES');
+				$default = $field->Default;
+				$extra   = $field->Extra;
 
 				$field = array(
 					'type'    => $type,
@@ -147,14 +160,14 @@
 		private function __getTableIndexes($table){
 			$result  = array();
 			$query   = "SHOW INDEX FROM `{$table}`";
-			$indexes = $this->_connection->fetch($query);
+			$indexes = $this->connection->query($query);
 
 			foreach ($indexes as $index){
-				$name     = $index['Key_name'];
-				$unique   = !$index['Non_unique'];
-				$column   = $index['Column_name'];
-				$sequence = $index['Seq_in_index'];
-				$length   = $index['Cardinality'];
+				$name     = $index->Key_name;
+				$unique   = !$index->Non_unique;
+				$column   = $index->Column_name;
+				$sequence = $index->Seq_in_index;
+				$length   = $index->Cardinality;
 
 				if(!isset ($result[$name])){
 					$result[$name] = array();
