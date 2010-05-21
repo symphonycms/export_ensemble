@@ -57,20 +57,16 @@
 			$group->appendChild($document->createElement('h3', __('Export Ensemble')));
 
 			$div = $document->createElement('div', NULL, array('id' => 'file-actions', 'class' => 'label'));
-			$span = $document->createElement('span');
-			
+
 			if(!class_exists('ZipArchive')){
-				$span->appendChild(
+				$div->appendChild(
 					$document->createElement('p',  __('Warning: It appears you do not have the "ZipArchive" class available. Ensure that PHP was compiled with --enable-zip'))
 				);
 			}
 			else{
-				$span->appendChild($document->createElement('button', __('Create'), array('name' => 'action[export]', 'type' => 'submit')));	
+				$div->appendChild($document->createElement('p', __('Packages entire site as a ".zip" archive for download.')));
+				$div->appendChild($document->createElement('button', __('Create'), array('name' => 'action[export]', 'type' => 'submit')));	
 			}
-			
-			$div->appendChild($span);
-
-			$div->appendChild($document->createElement('p', __('Packages entire site as a <code>.zip</code> archive for download.'), array('class' => 'help')));	
 
 			$group->appendChild($div);
 			$context['fieldsets'][] = $group;
