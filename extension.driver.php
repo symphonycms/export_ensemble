@@ -159,7 +159,7 @@
 				sprintf(
 					'Content-disposition: attachment; filename=%s-ensemble.zip', 
 					Lang::createFilename(
-						Symphony::Configuration()->core->symphony->sitename
+						Symphony::Configuration()->core()->symphony->sitename
 					)
 				)
 			);
