@@ -21,13 +21,7 @@
 					'page' => '/system/settings/extensions/',
 					'delegate' => 'AddSettingsFieldsets',
 					'callback' => 'cbAppendPreferences'
-				),
-			
-				array(
-					'page' => '/system/settings/extensions/',
-					'delegate' => 'CustomSaveActions',
-					'callback' => 'cbSavePreferences'
-				),
+				)
 			);
 		}
 		
@@ -40,14 +34,10 @@
 			return true;
 		}
 
-		public function cbSavePreferences($context){
-			$this->__export();
-		}
-
 		public function cbAppendPreferences($context){
 			
 			if(isset($_POST['action']['export'])){
-				$this->cbSavePreferences($context);
+				$this->export($context);
 			}
 			
 			$document = Administration::instance()->Page;
@@ -86,7 +76,7 @@
 			}
 		}
 		
-		private function __export(){
+		private function export($context){
 			$sql = NULL;
 			
 			require_once('lib/class.mysqldump.php');
@@ -128,8 +118,9 @@
 				$this->__addFolderToArchive($archive, SYMPHONY, DOCROOT);
 				$this->__addFolderToArchive($archive, WORKSPACE, DOCROOT);
 				$this->__addFolderToArchive($archive, DOCROOT . '/install', DOCROOT);
+				$this->__addFolderToArchive($archive, MANIFEST . '/templates', DOCROOT);
 
-				$archive->addFromString('install/assets/install.sql', $sql_schema);
+				$archive->addFromString('install/assets/install.sql', $sql);
 				
 				$archive->addFile(DOCROOT . '/index.php', 'index.php');
 				
@@ -143,7 +134,18 @@
 				if(is_file(DOCROOT . '/README')) $archive->addFile(DOCROOT . '/README', 'README');
 				if(is_file(DOCROOT . '/LICENCE')) $archive->addFile(DOCROOT . '/LICENCE', 'LICENCE');
 				if(is_file(DOCROOT . '/update.php')) $archive->addFile(DOCROOT . '/update.php', 'update.php');
-					
+				
+				$configuration_files = glob(CONF . '/*.xml');
+				if(is_array($configuration_files) && !empty($configuration_files)){
+					foreach($configuration_files as $filename){
+						if(in_array(basename($filename), array('db.xml', 'core.xml'))) continue;
+						$archive->addFile($filename, 'manifest/conf/' . basename($filename));
+					}
+				}
+				
+				$this->__addFolderToArchive($archive, MANIFEST . '/templates', DOCROOT);
+				if(is_file(CONF . '/.htaccess')) $archive->addFile(CONF . '/.htaccess', 'manifest/conf/.htaccess');
+				if(is_file(MANIFEST . '/extensions.xml')) $archive->addFile(MANIFEST . '/extensions.xml', 'manifest/extensions.xml');
 			}
 			
 			$archive->close();
