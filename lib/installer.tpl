@@ -72,7 +72,7 @@
 			return NULL;
 		}
 
-		define('Symphony::lang()', $lang);
+		define('__LANG__', $lang);
 		return $lang;
 	}
 
