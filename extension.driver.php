@@ -201,7 +201,7 @@
 
 
 			$div = new XMLElement('div', NULL, array('id' => 'file-actions', 'class' => 'label'));
-			$span = new XMLElement('span');
+			$span = new XMLElement('span', NULL, array('class' => 'frame'));
 
 			if(!class_exists('ZipArchive')){
 				$span->appendChild(
