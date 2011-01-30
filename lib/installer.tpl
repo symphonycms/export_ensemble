@@ -30,7 +30,7 @@
 	}
 
 	// Defines
-	define('kVERSION', '2.2.0dev');
+	define('kVERSION', '2.2RC1');
 	define('kINSTALL_ASSET_LOCATION', './symphony/assets/installer');
 	define('kINSTALL_FILENAME', basename(__FILE__));
 	define('DOCROOT', rtrim(dirname(__FILE__), '\\/'));
@@ -176,8 +176,9 @@
 		$conf['symphony']['pagination_maximum_rows'] = '17';
 		$conf['symphony']['allow_page_subscription'] = '1';
 		$conf['symphony']['lang'] = Lang::get();
-		$conf['symphony']['version'] = '2.1.1';
+		$conf['symphony']['version'] = kVERSION;
 		$conf['symphony']['pages_table_nest_children'] = 'yes';
+		$conf['symphony']['strict_error_handling'] = 'yes';
 		$conf['log']['archive'] = '1';
 		$conf['log']['maxsize'] = '102400';
 		$conf['general']['sitename'] = 'Symphony CMS';

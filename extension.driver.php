@@ -70,7 +70,7 @@
 
 			## Grab the schema
 			foreach($tables as $t) $sql_schema .= $dump->export($t, MySQLDump::STRUCTURE_ONLY);
-			$sql_schema = str_replace('`' . Administration::instance()->Configuration->get('tbl_prefix', 'database'), '`tbl_', $sql_schema);
+			$sql_schema = str_replace('`' . Symphony::Configuration()->get('tbl_prefix', 'database'), '`tbl_', $sql_schema);
 
 			$sql_schema = preg_replace('/AUTO_INCREMENT=\d+/i', NULL, $sql_schema);
 
@@ -94,10 +94,10 @@
 				$sql_data .= $dump->export($t, MySQLDump::DATA_ONLY);
 			}
 
-			$sql_data = str_replace('`' . Administration::instance()->Configuration->get('tbl_prefix', 'database'), '`tbl_', $sql_data);
+			$sql_data = str_replace('`' . Symphony::Configuration()->get('tbl_prefix', 'database'), '`tbl_', $sql_data);
 
 			$config_string = NULL;
-			$config = Administration::instance()->Configuration->get();
+			$config = Symphony::Configuration()->get();
 
 			unset($config['symphony']['build']);
 			unset($config['symphony']['cookie_prefix']);
@@ -119,20 +119,19 @@
 			}
 
 			$install_template = str_replace(
+				array(
+					'<!-- BUILD -->',
+					'<!-- VERSION -->',
+					'<!-- CONFIGURATION -->'
+				),
 
-									array(
-										'<!-- BUILD -->',
-										'<!-- VERSION -->',
-										'<!-- CONFIGURATION -->'
-									),
+				array(
+					Symphony::Configuration()->get('build', 'symphony'),
+					Symphony::Configuration()->get('version', 'symphony'),
+					trim($config_string),
+				),
 
-									array(
-										Administration::instance()->Configuration->get('build', 'symphony'),
-										Administration::instance()->Configuration->get('version', 'symphony'),
-										trim($config_string),
-									),
-
-									file_get_contents(dirname(__FILE__) . '/lib/installer.tpl')
+				file_get_contents(dirname(__FILE__) . '/lib/installer.tpl')
 			);
 
 			$archive = new ZipArchive;
@@ -160,7 +159,6 @@
 				if(is_file(DOCROOT . '/README')) $archive->addFile(DOCROOT . '/README', 'README');
 				if(is_file(DOCROOT . '/LICENCE')) $archive->addFile(DOCROOT . '/LICENCE', 'LICENCE');
 				if(is_file(DOCROOT . '/update.php')) $archive->addFile(DOCROOT . '/update.php', 'update.php');
-
 			}
 
 			$archive->close();
@@ -172,7 +170,7 @@
 				sprintf(
 					'Content-disposition: attachment; filename=%s-ensemble.zip',
 					Lang::createFilename(
-						Administration::instance()->Configuration->get('sitename', 'general')
+						Symphony::Configuration()->get('sitename', 'general')
 					)
 				)
 			);

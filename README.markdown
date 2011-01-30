@@ -29,11 +29,9 @@ Information about [installing and updating extensions](http://symphony-cms.com/l
 - Compatibility cahnges for 2.2
 - Fix markup bug
 
-
 **Version 1.11**
 
 - Compatibility changes for 2.0.7RC2
-
 
 **Version 1.10**
 
