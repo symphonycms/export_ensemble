@@ -4,7 +4,7 @@
 
 		public function about(){
 			return array('name' => 'Export Ensemble',
-						 'version' => '1.2',
+						 'version' => '1.12',
 						 'release-date' => '2011-01-02',
 						 'author' => array('name' => 'Alistair Kearney',
 										   'website' => 'http://pointybeard.com',

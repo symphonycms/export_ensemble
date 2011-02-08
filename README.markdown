@@ -3,7 +3,7 @@
 This extension exports your Symphony website.
 It is part of the Symphony core download package.
 
-- Version: 1.2
+- Version: 1.12
 - Date: 2nd January 2011
 - Requirements: Symphony 2.2 or above, ZIP enabled (--enable-zip)
 - Author: Alistair Kearney, alistair@symphony-cms.com
@@ -24,9 +24,9 @@ Information about [installing and updating extensions](http://symphony-cms.com/l
 
 ## Change Log
 
-**Version 1.2**
+**Version 1.12**
 
-- Compatibility cahnges for 2.2
+- Compatibility changes for 2.2
 - Fix markup bug
 
 **Version 1.11**
