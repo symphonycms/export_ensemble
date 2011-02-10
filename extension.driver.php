@@ -14,23 +14,22 @@
 
 		public function getSubscribedDelegates(){
 			return array(
-						array(
-							'page' => '/system/preferences/',
-							'delegate' => 'AddCustomPreferenceFieldsets',
-							'callback' => 'appendPreferences'
-						),
-
-					);
+				array(
+					'page' => '/system/preferences/',
+					'delegate' => 'AddCustomPreferenceFieldsets',
+					'callback' => 'appendPreferences'
+				)
+			);
 		}
 
 		public function install(){
-
 			if(!class_exists('ZipArchive')){
 				if(isset(Administration::instance()->Page)){
-					Administration::instance()->Page->pageAlert(__('Export Ensemble cannot be installed, since the "<a href="http://php.net/manual/en/book.zip.php">ZipArchive</a>" class is not available. Ensure that PHP was compiled with the <code>--enable-zip</code> flag.'), AdministrationPage::PAGE_ALERT_ERROR);
+					Administration::instance()->Page->pageAlert(__('Export Ensemble cannot be installed, since the "<a href="http://php.net/manual/en/book.zip.php">ZipArchive</a>" class is not available. Ensure that PHP was compiled with the <code>--enable-zip</code> flag.'), Alert::ERROR);
 				}
 				return false;
 			}
+			return true;
 		}
 
 		private function __addFolderToArchive(&$archive, $path, $parent=NULL){
