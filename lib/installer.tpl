@@ -30,7 +30,7 @@
 	}
 
 	// Defines
-	define('kVERSION', '2.2RC1');
+	define('kVERSION', '<!-- VERSION -->');
 	define('kINSTALL_ASSET_LOCATION', './symphony/assets/installer');
 	define('kINSTALL_FILENAME', basename(__FILE__));
 	define('DOCROOT', rtrim(dirname(__FILE__), '\\/'));
@@ -172,27 +172,7 @@
 
 		$conf = array();
 
-		$conf['admin']['max_upload_size'] = '5242880';
-		$conf['symphony']['pagination_maximum_rows'] = '17';
-		$conf['symphony']['allow_page_subscription'] = '1';
-		$conf['symphony']['lang'] = Lang::get();
-		$conf['symphony']['version'] = kVERSION;
-		$conf['symphony']['pages_table_nest_children'] = 'yes';
-		$conf['symphony']['strict_error_handling'] = 'yes';
-		$conf['log']['archive'] = '1';
-		$conf['log']['maxsize'] = '102400';
-		$conf['general']['sitename'] = 'Symphony CMS';
-		$conf['image']['cache'] = '1';
-		$conf['image']['quality'] = '90';
-		$conf['database']['driver'] = 'mysql';
-		$conf['database']['character_set'] = 'utf8';
-		$conf['database']['character_encoding'] = 'utf8';
-		$conf['database']['runtime_character_set_alter'] = '1';
-		$conf['database']['query_caching'] = 'default';
-		$conf['public']['display_event_xml_in_source'] = 'yes';
-		$conf['region']['time_format'] = 'H:i';
-		$conf['region']['date_format'] = 'd F Y';
-		$conf['region']['datetime_separator'] = ' ';
+		<!-- CONFIGURATION -->
 
 		return $conf;
 

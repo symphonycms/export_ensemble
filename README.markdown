@@ -3,12 +3,12 @@
 This extension exports your Symphony website.
 It is part of the Symphony core download package.
 
-- Version: 1.12
-- Date: 2nd January 2011
+- Version: 1.13
+- Date: 18th April 2011
 - Requirements: Symphony 2.2 or above, ZIP enabled (--enable-zip)
 - Author: Alistair Kearney, alistair@symphony-cms.com
-- Constributors: [A list of contributors can be found in the commit history](http://github.com/pointybeard/export_ensemble/commits/master)
-- GitHub Repository: <http://github.com/pointybeard/export_ensemble>
+- Constributors: [A list of contributors can be found in the commit history](http://github.com/symphonycms/export_ensemble/commits/master)
+- GitHub Repository: <http://github.com/symphonycms/export_ensemble>
 
 ## Synopsis
 
@@ -23,6 +23,11 @@ Currently this extension adds a "Create" button to the preferences page. In the 
 Information about [installing and updating extensions](http://symphony-cms.com/learn/tasks/view/install-an-extension/) can be found in the Symphony documentation at <http://symphony-cms.com/learn/>.
 
 ## Change Log
+
+**Version 1.13**
+
+- Use the current Symphony install configuration values instead of always using the defaults
+- Export Ensemble is now dynamic and uses the the current Symphony version instead of being hardcoded
 
 **Version 1.12**
 
