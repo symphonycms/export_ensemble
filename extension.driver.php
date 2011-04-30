@@ -5,8 +5,8 @@
 		public function about(){
 			return array(
 				'name' => 'Export Ensemble',
-				'version' => '1.13',
-				'release-date' => '2011-04-18',
+				'version' => '1.14',
+				'release-date' => '2011-04-30',
 				'author' => array(
 					array(
 						'name' => 'Alistair Kearney',
@@ -64,6 +64,7 @@
 
 			$tables = array(
 				'tbl_authors',
+				'tbl_sessions',
 				'tbl_cache',
 				'tbl_entries',
 				'tbl_extensions',
