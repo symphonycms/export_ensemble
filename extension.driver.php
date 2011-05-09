@@ -56,55 +56,94 @@
 		}
 
 		private function __export(){
+
+			## Find all tables in the database
+			$Database = Symphony::Database();
+			$all_tables = $Database->fetch('show tables');
+
+			## Find table prefix used for this install of Symphony
+			$tbl_prefix = Symphony::Configuration()->get('tbl_prefix', 'database');
+
+			## Find length of prefix to test for table prefix
+			$prefix_length = strlen($tbl_prefix);
+
+			## Flatten multidimensional tables array
+			$db_tables = array();
+			foreach($all_tables as $table){
+				$value = array_values($table);
+				$value = $value[0];
+
+				## Limit array of tables to those using the table prefix
+				## and replace the table prefix with tbl
+				if(substr($value, 0, $prefix_length) === $tbl_prefix){
+					$db_tables[] = 'tbl_' . substr($value, $prefix_length);
+				}
+			}
+
+			## Create arrays to store tables for structure and data dumps
+			$structure_tables = $data_tables = $db_tables;
+
+			## Create array of tables to ignore for structure-only dump
+			$ignore_tables = array(
+				'tbl_entries_',
+				'tbl_fields_'
+			);
+
+			## Remove tables from list for structure-only dump
+			foreach($structure_tables as $index => $table){
+				foreach($ignore_tables as $starts){
+					if(substr($table, 0, strlen($starts)) === $starts ){
+						unset($structure_tables[$index]);
+					}
+				}
+			}
+
+			## Add fields tables back into list
+			$structure_tables[] = 'tbl_fields_%';
+			sort($structure_tables);
+
+			## Create array of tables to ignore for data-only dump
+			$ignore_tables = array(
+				'tbl_authors',
+				'tbl_cache',
+				'tbl_entries_',
+				'tbl_fields_',
+				'tbl_forgotpass',
+				'tbl_sessions'
+			);
+
+			## Remove tables from list for data-only dump
+			foreach($data_tables as $index => $table){
+				foreach($ignore_tables as $starts){
+					if(substr($table, 0, strlen($starts)) === $starts ){
+						unset($data_tables[$index]);
+					}
+				}
+			}
+
+			## Create variables for the dump files
 			$sql_schema = $sql_data = NULL;
 
 			require_once(dirname(__FILE__) . '/lib/class.mysqldump.php');
 
 			$dump = new MySQLDump(Symphony::Database());
 
-			$tables = array(
-				'tbl_authors',
-				'tbl_sessions',
-				'tbl_cache',
-				'tbl_entries',
-				'tbl_extensions',
-				'tbl_extensions_delegates',
-				'tbl_fields',
-				'tbl_fields_%',
-				'tbl_forgotpass',
-				'tbl_pages',
-				'tbl_pages_types',
-				'tbl_sections',
-				'tbl_sections_association'
-			);
-
 			## Grab the schema
-			foreach($tables as $t) $sql_schema .= $dump->export($t, MySQLDump::STRUCTURE_ONLY);
+			foreach($structure_tables as $t) $sql_schema .= $dump->export($t, MySQLDump::STRUCTURE_ONLY);
 			$sql_schema = str_replace('`' . Symphony::Configuration()->get('tbl_prefix', 'database'), '`tbl_', $sql_schema);
 
 			$sql_schema = preg_replace('/AUTO_INCREMENT=\d+/i', NULL, $sql_schema);
-
-			$tables = array(
-				'tbl_entries',
-				'tbl_extensions',
-				'tbl_extensions_delegates',
-				'tbl_fields',
-				'tbl_pages',
-				'tbl_pages_types',
-				'tbl_sections',
-				'tbl_sections_association'
-			);
 
 			## Field data and entry data schemas needs to be apart of the workspace sql dump
 			$sql_data  = $dump->export('tbl_fields_%', MySQLDump::ALL);
 			$sql_data .= $dump->export('tbl_entries_%', MySQLDump::ALL);
 
 			## Grab the data
-			foreach($tables as $t){
+			foreach($data_tables as $t){
 				$sql_data .= $dump->export($t, MySQLDump::DATA_ONLY);
 			}
 
-			$sql_data = str_replace('`' . Symphony::Configuration()->get('tbl_prefix', 'database'), '`tbl_', $sql_data);
+			$sql_data = str_replace('`' . $tbl_prefix, '`tbl_', $sql_data);
 
 			$config_string = NULL;
 			$config = Symphony::Configuration()->get();
@@ -121,6 +160,17 @@
 			unset($config['database']['db']);
 			unset($config['database']['tbl_prefix']);
 			unset($config['region']['timezone']);
+			unset($config['email']['default_gateway']);
+			unset($config['email_sendmail']['from_name']);
+			unset($config['email_sendmail']['from_address']);
+			unset($config['email_smtp']['from_name']);
+			unset($config['email_smtp']['from_address']);
+			unset($config['email_smtp']['host']);
+			unset($config['email_smtp']['port']);
+			unset($config['email_smtp']['secure']);
+			unset($config['email_smtp']['auth']);
+			unset($config['email_smtp']['username']);
+			unset($config['email_smtp']['password']);
 
 			foreach($config as $group => $set){
 				foreach($set as $key => $val){
