@@ -83,7 +83,7 @@
 			## Create arrays to store tables for structure and data dumps
 			$structure_tables = $data_tables = $db_tables;
 
-			## Create array of tables to ignore for data-only dump
+			## Create array of tables to ignore for structure-only dump
 			$ignore_tables = array(
 				'tbl_entries_',
 				'tbl_fields_'
@@ -101,6 +101,25 @@
 			## Add fields tables back into list
 			$structure_tables[] = 'tbl_fields_%';
 			sort($structure_tables);
+
+			## Create array of tables to ignore for data-only dump
+			$ignore_tables = array(
+				'tbl_authors',
+				'tbl_cache',
+				'tbl_entries_',
+				'tbl_fields_',
+				'tbl_forgotpass',
+				'tbl_sessions'
+			);
+
+			## Remove tables from list for data-only dump
+			foreach($data_tables as $index => $table){
+				foreach($ignore_tables as $starts){
+					if(substr($table, 0, strlen($starts)) === $starts ){
+						unset($data_tables[$index]);
+					}
+				}
+			}
 
 			## Create variables for the dump files
 			$sql_schema = $sql_data = NULL;
