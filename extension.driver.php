@@ -43,14 +43,14 @@
 		}
 
 
-		public function __SavePreferences($context){
-			$this->__export();
-		}
-
 		public function appendPreferences($context){
 
-			if(isset($_POST['action']['export'])){
-				$this->__SavePreferences($context);
+			if(isset($_POST['action']['download-zip'])){
+				$this->__downloadZip();
+			}
+
+			if(isset($_POST['action']['save-install-files'])){
+				$this->__saveInstallFiles();
 			}
 
 			$group = new XMLElement('fieldset');
@@ -61,36 +61,41 @@
 			$div = new XMLElement('div', NULL, array('id' => 'file-actions', 'class' => 'label'));
 			$span = new XMLElement('span', NULL, array('class' => 'frame'));
 
+			$span->appendChild(new XMLElement('button', __('Save Install Files'), array('name' => 'action[save-install-files]', 'type' => 'submit')));
+
 			if(!class_exists('ZipArchive')){
 				$span->appendChild(
 					new XMLElement('p', '<strong>' . __('Warning: It appears you do not have the "ZipArchive" class available. Ensure that PHP was compiled with <code>--enable-zip</code>') . '</strong>')
 				);
 			}
 			else{
-				$span->appendChild(new XMLElement('button', __('Create'), array('name' => 'action[export]', 'type' => 'submit')));
+				$span->appendChild(new XMLElement('button', __('Download ZIP'), array('name' => 'action[download-zip]', 'type' => 'submit')));
 			}
 
 			$div->appendChild($span);
 
-			$div->appendChild(new XMLElement('p', __('Packages entire site as a <code>.zip</code> archive for download.'), array('class' => 'help')));
+			$div->appendChild(new XMLElement('p', __('Save (overwrite) install files or package entire site as a <code>.zip</code> archive for download.'), array('class' => 'help')));
 
 			$group->appendChild($div);
 			$context['wrapper']->appendChild($group);
 
 		}
 
-		private function __export(){
+		private function __downloadZip(){
+
+			## Find table prefix used for this install of Symphony
+			$tbl_prefix = Symphony::Configuration()->get('tbl_prefix', 'database');
 
 			## Create arrays of tables to dump
-			$db_tables = $this->__getDatabaseTables();
+			$db_tables = $this->__getDatabaseTables($tbl_prefix);
 			$data_tables = $this->__getDataTables($db_tables);
 			$structure_tables = $this->__getStructureTables($db_tables);
 
 			## Perform SQL dumps
 			require_once(dirname(__FILE__) . '/lib/class.mysqldump.php');
 			$dump = new MySQLDump(Symphony::Database());
-			$sql_schema = $this->__dumpSchema($dump, $structure_tables);
-			$sql_data = $this->__dumpData($dump, $data_tables);
+			$sql_schema = $this->__dumpSchema($dump, $structure_tables, $tbl_prefix);
+			$sql_data = $this->__dumpData($dump, $data_tables, $tbl_prefix);
 
 			## Create install.php file
 			$install_template = $this->__createInstallFile();
@@ -100,14 +105,43 @@
 
 		}
 
-		private function __getDatabaseTables(){
+		private function __saveInstallFiles(){
+
+			## Find table prefix used for this install of Symphony
+			$tbl_prefix = Symphony::Configuration()->get('tbl_prefix', 'database');
+
+			## Create arrays of tables to dump
+			$db_tables = $this->__getDatabaseTables($tbl_prefix);
+			$data_tables = $this->__getDataTables($db_tables);
+			$structure_tables = $this->__getStructureTables($db_tables);
+
+			## Perform SQL dumps
+			require_once(dirname(__FILE__) . '/lib/class.mysqldump.php');
+			$dump = new MySQLDump(Symphony::Database());
+			$sql_schema = $this->__dumpSchema($dump, $structure_tables, $tbl_prefix);
+			$sql_data = $this->__dumpData($dump, $data_tables, $tbl_prefix);
+
+			## Create install.php file
+			$install_file = $this->__createInstallFile();
+
+			## Write the install files
+			try {
+				file_put_contents(DOCROOT . '/install.sql', $sql_schema);
+				file_put_contents(DOCROOT . '/workspace/install.sql', $sql_data);
+				file_put_contents(DOCROOT . '/install.php', $install_file);
+				Administration::instance()->Page->pageAlert(__('The install files were successfully saved.'), Alert::SUCCESS);
+			}
+			catch (Exception $e) {
+				Administration::instance()->Page->pageAlert(__('An error occurred while trying to write the install files: ' . $e->getMessage()), Alert::ERROR);
+			}
+
+		}
+
+		private function __getDatabaseTables($tbl_prefix){
 
 			## Find all tables in the database
 			$Database = Symphony::Database();
 			$all_tables = $Database->fetch('show tables');
-
-			## Find table prefix used for this install of Symphony
-			$tbl_prefix = Symphony::Configuration()->get('tbl_prefix', 'database');
 
 			## Find length of prefix to test for table prefix
 			$prefix_length = strlen($tbl_prefix);
@@ -180,14 +214,14 @@
 		}
 
 
-		private function __dumpSchema($dump, $structure_tables){
+		private function __dumpSchema($dump, $structure_tables, $tbl_prefix){
 
 			## Create variables for the dump files
 			$sql_schema = NULL;
 
 			## Grab the schema
 			foreach($structure_tables as $t) $sql_schema .= $dump->export($t, MySQLDump::STRUCTURE_ONLY);
-			$sql_schema = str_replace('`' . Symphony::Configuration()->get('tbl_prefix', 'database'), '`tbl_', $sql_schema);
+			$sql_schema = str_replace('`' . $tbl_prefix, '`tbl_', $sql_schema);
 
 			$sql_schema = preg_replace('/AUTO_INCREMENT=\d+/i', NULL, $sql_schema);
 
@@ -195,7 +229,7 @@
 
 		}
 
-		private function __dumpData($dump, $data_tables){
+		private function __dumpData($dump, $data_tables, $tbl_prefix){
 
 			## Create variables for the dump files
 			$sql_data = NULL;
