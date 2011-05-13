@@ -88,8 +88,8 @@
 
 			## Create arrays of tables to dump
 			$db_tables = $this->__getDatabaseTables($tbl_prefix);
-			$data_tables = $this->__getDataTables($db_tables);
 			$structure_tables = $this->__getStructureTables($db_tables);
+			$data_tables = $this->__getDataTables($db_tables);
 
 			## Perform SQL dumps
 			require_once(dirname(__FILE__) . '/lib/class.mysqldump.php');
@@ -112,8 +112,8 @@
 
 			## Create arrays of tables to dump
 			$db_tables = $this->__getDatabaseTables($tbl_prefix);
-			$data_tables = $this->__getDataTables($db_tables);
 			$structure_tables = $this->__getStructureTables($db_tables);
+			$data_tables = $this->__getDataTables($db_tables);
 
 			## Perform SQL dumps
 			require_once(dirname(__FILE__) . '/lib/class.mysqldump.php');
@@ -163,7 +163,7 @@
 
 		}
 
-		private function __getDataTables($data_tables){
+		private function __getStructureTables($structure_tables){
 
 			## Create array of tables to ignore for structure-only dump
 			$ignore_tables = array(
@@ -172,23 +172,23 @@
 			);
 
 			## Remove tables from list for structure-only dump
-			foreach($data_tables as $index => $table){
+			foreach($structure_tables as $index => $table){
 				foreach($ignore_tables as $starts){
 					if(substr($table, 0, strlen($starts)) === $starts ){
-						unset($data_tables[$index]);
+						unset($structure_tables[$index]);
 					}
 				}
 			}
 
 			## Add fields tables back into list
-			$data_tables[] = 'tbl_fields_%';
-			sort($data_tables);
+			$structure_tables[] = 'tbl_fields_%';
+			sort($structure_tables);
 
-			return $data_tables;
+			return $structure_tables;
 
 		}
 
-		private function __getStructureTables($structure_tables){
+		private function __getDataTables($data_tables){
 
 			## Create array of tables to ignore for data-only dump
 			$ignore_tables = array(
@@ -201,15 +201,15 @@
 			);
 
 			## Remove tables from list for data-only dump
-			foreach($structure_tables as $index => $table){
+			foreach($data_tables as $index => $table){
 				foreach($ignore_tables as $starts){
 					if(substr($table, 0, strlen($starts)) === $starts ){
-						unset($structure_tables[$index]);
+						unset($data_tables[$index]);
 					}
 				}
 			}
 
-			return $structure_tables;
+			return $data_tables;
 
 		}
 
