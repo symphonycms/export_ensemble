@@ -324,53 +324,59 @@
 
 		private function __createZipArchive($install_template, $sql_schema, $sql_data){
 
-			$archive = new ZipArchive;
-			$res = $archive->open(TMP . '/ensemble.tmp.zip', ZipArchive::CREATE);
+			if (!is_writable(DOCROOT . '/manifest/tmp')) {
 
-			if ($res === TRUE) {
+				Administration::instance()->Page->pageAlert(__('Check permissions for the /manifest/tmp directory.'), Alert::ERROR);
 
-				$this->__addFolderToArchive($archive, EXTENSIONS, DOCROOT);
-				$this->__addFolderToArchive($archive, SYMPHONY, DOCROOT);
-				$this->__addFolderToArchive($archive, WORKSPACE, DOCROOT);
-
-				$archive->addFromString('install.php', $install_template);
-				$archive->addFromString('install.sql', $sql_schema);
-				$archive->addFromString('workspace/install.sql', $sql_data);
-
-				$archive->addFile(DOCROOT . '/index.php', 'index.php');
-
-				$readme_files = glob(DOCROOT . '/README.*');
-				if(is_array($readme_files) && !empty($readme_files)){
-					foreach($readme_files as $filename){
-						$archive->addFile($filename, basename($filename));
+			} else {
+			
+				$archive = new ZipArchive;
+				$res = $archive->open(TMP . '/ensemble.tmp.zip', ZipArchive::CREATE);
+	
+				if ($res === TRUE) {
+	
+					$this->__addFolderToArchive($archive, EXTENSIONS, DOCROOT);
+					$this->__addFolderToArchive($archive, SYMPHONY, DOCROOT);
+					$this->__addFolderToArchive($archive, WORKSPACE, DOCROOT);
+	
+					$archive->addFromString('install.php', $install_template);
+					$archive->addFromString('install.sql', $sql_schema);
+					$archive->addFromString('workspace/install.sql', $sql_data);
+	
+					$archive->addFile(DOCROOT . '/index.php', 'index.php');
+	
+					$readme_files = glob(DOCROOT . '/README.*');
+					if(is_array($readme_files) && !empty($readme_files)){
+						foreach($readme_files as $filename){
+							$archive->addFile($filename, basename($filename));
+						}
 					}
+	
+					if(is_file(DOCROOT . '/README')) $archive->addFile(DOCROOT . '/README', 'README');
+					if(is_file(DOCROOT . '/LICENCE')) $archive->addFile(DOCROOT . '/LICENCE', 'LICENCE');
+					if(is_file(DOCROOT . '/update.php')) $archive->addFile(DOCROOT . '/update.php', 'update.php');
 				}
-
-				if(is_file(DOCROOT . '/README')) $archive->addFile(DOCROOT . '/README', 'README');
-				if(is_file(DOCROOT . '/LICENCE')) $archive->addFile(DOCROOT . '/LICENCE', 'LICENCE');
-				if(is_file(DOCROOT . '/update.php')) $archive->addFile(DOCROOT . '/update.php', 'update.php');
-			}
-
-			$archive->close();
-
-			header('Content-type: application/octet-stream');
-			header('Expires: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-
-			header(
-				sprintf(
-					'Content-disposition: attachment; filename=%s-ensemble.zip',
-					Lang::createFilename(
-						Symphony::Configuration()->get('sitename', 'general')
+	
+				$archive->close();
+	
+				header('Content-type: application/octet-stream');
+				header('Expires: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+	
+				header(
+					sprintf(
+						'Content-disposition: attachment; filename=%s-ensemble.zip',
+						Lang::createFilename(
+							Symphony::Configuration()->get('sitename', 'general')
+						)
 					)
-				)
-			);
-
-			header('Pragma: no-cache');
-
-			readfile(TMP . '/ensemble.tmp.zip');
-			unlink(TMP . '/ensemble.tmp.zip');
-			exit();
-
+				);
+	
+				header('Pragma: no-cache');
+	
+				readfile(TMP . '/ensemble.tmp.zip');
+				unlink(TMP . '/ensemble.tmp.zip');
+				exit();
+			}
 		}
 
 		private function __addFolderToArchive(&$archive, $path, $parent=NULL){
