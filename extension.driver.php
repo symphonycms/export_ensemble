@@ -125,15 +125,35 @@
 			$install_file = $this->__createInstallFile();
 
 			## Write the install files
-			try {
-				file_put_contents(DOCROOT . '/install.sql', $sql_schema);
-				file_put_contents(DOCROOT . '/workspace/install.sql', $sql_data);
-				file_put_contents(DOCROOT . '/install.php', $install_file);
+			if(!is_writable(DOCROOT . '/install.sql') || !is_writable(DOCROOT . '/workspace/install.sql') || !is_writable(DOCROOT . '/install.php')) {
+			
+				Administration::instance()->Page->pageAlert(__('Check permissions for the install files. At least one of the files is not writable.'), Alert::ERROR);
+	
+			} else {
+			
+				try {
+					file_put_contents(DOCROOT . '/install.sql', $sql_schema);
+				}
+				catch (Exception $e) {
+					Administration::instance()->Page->pageAlert(__('An error occurred while trying to write the install files: ' . $e->getMessage()), Alert::ERROR);
+				}
+				try {
+					file_put_contents(DOCROOT . '/workspace/install.sql', $sql_data);
+				}
+				catch (Exception $e) {
+					Administration::instance()->Page->pageAlert(__('An error occurred while trying to write the install files: ' . $e->getMessage()), Alert::ERROR);
+				}
+				try {
+					file_put_contents(DOCROOT . '/install.php', $install_file);
+				}
+				catch (Exception $e) {
+					Administration::instance()->Page->pageAlert(__('An error occurred while trying to write the install files: ' . $e->getMessage()), Alert::ERROR);
+				}
+	
 				Administration::instance()->Page->pageAlert(__('The install files were successfully saved.'), Alert::SUCCESS);
+
 			}
-			catch (Exception $e) {
-				Administration::instance()->Page->pageAlert(__('An error occurred while trying to write the install files: ' . $e->getMessage()), Alert::ERROR);
-			}
+			
 
 		}
 
