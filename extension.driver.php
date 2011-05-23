@@ -67,9 +67,7 @@
 			$span->appendChild(new XMLElement('button', __('Save Install Files'), array('name' => 'action[save-install-files]', 'type' => 'submit')));
 
 			if(!class_exists('ZipArchive')){
-				$span->appendChild(
-					new XMLElement('p', '<strong>' . __('Warning: It appears you do not have the "ZipArchive" class available. Ensure that PHP was compiled with <code>--enable-zip</code>') . '</strong>')
-				);
+				$no_zip_warning = ' <strong>' . __('Warning: It appears you do not have the "ZipArchive" class available. To enable ZIP download, ensure that PHP is compiled with <code>--enable-zip</code>') . '</strong>';
 			}
 			else{
 				$span->appendChild(new XMLElement('button', __('Download ZIP'), array('name' => 'action[download-zip]', 'type' => 'submit')));
@@ -77,7 +75,7 @@
 
 			$div->appendChild($span);
 
-			$div->appendChild(new XMLElement('p', __('Save (overwrite) install files or package entire site as a <code>.zip</code> archive for download.'), array('class' => 'help')));
+			$div->appendChild(new XMLElement('p', __('Save (overwrite) install files or package entire site as a <code>.zip</code> archive for download.' . $no_zip_warning), array('class' => 'help')));
 
 			$group->appendChild($div);
 			$context['wrapper']->appendChild($group);
