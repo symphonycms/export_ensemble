@@ -5,8 +5,8 @@
 		public function about(){
 			return array(
 				'name' => 'Export Ensemble',
-				'version' => '1.14',
-				'release-date' => '2011-04-30',
+				'version' => '1.15',
+				'release-date' => '2011-05-22',
 				'author' => array(
 					array(
 						'name' => 'Alistair Kearney',
