@@ -5,7 +5,7 @@ It is part of the Symphony core download package.
 
 - Version: 1.15
 - Date: 22nd May 2011
-- Requirements: Symphony 2.2 or above, ZIP enabled (--enable-zip)
+- Requirements: Symphony 2.2 or above. The `Download ZIP` feature requires the ZIP module for PHP (`--enable-zip`).
 - Author: Alistair Kearney, alistair@symphony-cms.com
 - Constributors: [A list of contributors can be found in the commit history](http://github.com/symphonycms/export_ensemble/commits/master)
 - GitHub Repository: <http://github.com/symphonycms/export_ensemble>
@@ -16,7 +16,7 @@ This extension will create an installable version of your Symphony install usefu
 
 The ZIP module of PHP is utilised, and is memory efficient, allowing for larger sites to be exported without the need for increasing PHP's memory limit.
 
-This extension adds "Save Install Files" and "Download Zip" buttons to the preferences page.
+This extension adds "Save Install Files" and "Download ZIP" buttons to the preferences page.
 
 ## Installation & Updating
 
