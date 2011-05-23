@@ -35,9 +35,8 @@
 		public function install(){
 			if(!class_exists('ZipArchive')){
 				if(isset(Administration::instance()->Page)){
-					Administration::instance()->Page->pageAlert(__('Export Ensemble cannot be installed, since the "<a href="http://php.net/manual/en/book.zip.php">ZipArchive</a>" class is not available. Ensure that PHP was compiled with the <code>--enable-zip</code> flag.'), Alert::ERROR);
+					Administration::instance()->Page->pageAlert(__('Export Ensemble will not be able to download ZIP archives, since the "<a href="http://php.net/manual/en/book.zip.php">ZipArchive</a>" class is not available. To enable ZIP downloads, compile PHP with the <code>--enable-zip</code> flag.'), Alert::ERROR);
 				}
-				return false;
 			}
 			return true;
 		}
@@ -46,7 +45,11 @@
 		public function appendPreferences($context){
 
 			if(isset($_POST['action']['download-zip'])){
-				$this->__downloadZip();
+				if(class_exists('ZipArchive')){
+					$this->__downloadZip();
+				} else {
+					Administration::instance()->Page->pageAlert(__('Export Ensemble is not able to download ZIP archives, since the "<a href="http://php.net/manual/en/book.zip.php">ZipArchive</a>" class is not available. To enable ZIP downloads, compile PHP with the <code>--enable-zip</code> flag. Try saving your install files instead and follow the README instructions.'), Alert::ERROR);
+				}
 			}
 
 			if(isset($_POST['action']['save-install-files'])){
