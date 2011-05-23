@@ -12,11 +12,11 @@ It is part of the Symphony core download package.
 
 ## Synopsis
 
-This extension will create an installable version of your Symphony install useful for distribution. The resultant archive contains install.php, install.sql and workspace/install.sql files. This is how all official Symphony releases are created.
+This extension will create an installable version of your Symphony install useful for distribution. The resultant archive contains `install.php`, `install.sql` and `workspace/install.sql` files. This is how all official Symphony releases are created.
 
 The ZIP module of PHP is utilised, and is memory efficient, allowing for larger sites to be exported without the need for increasing PHP's memory limit.
 
-Currently this extension adds a "Create" button to the preferences page. In the future it will instead have its own interface with options for including additional files and folders as well as excluding and other options.
+This extension adds "Save Install Files" and "Download Zip" buttons to the preferences page.
 
 ## Installation & Updating
 
