@@ -5,8 +5,8 @@
 		public function about(){
 			return array(
 				'name' => 'Export Ensemble',
-				'version' => '1.14',
-				'release-date' => '2011-04-30',
+				'version' => '1.15',
+				'release-date' => '2011-05-22',
 				'author' => array(
 					array(
 						'name' => 'Alistair Kearney',
@@ -35,9 +35,8 @@
 		public function install(){
 			if(!class_exists('ZipArchive')){
 				if(isset(Administration::instance()->Page)){
-					Administration::instance()->Page->pageAlert(__('Export Ensemble cannot be installed, since the "<a href="http://php.net/manual/en/book.zip.php">ZipArchive</a>" class is not available. Ensure that PHP was compiled with the <code>--enable-zip</code> flag.'), Alert::ERROR);
+					Administration::instance()->Page->pageAlert(__('Export Ensemble will not be able to download ZIP archives, since the "<a href="http://php.net/manual/en/book.zip.php">ZipArchive</a>" class is not available. To enable ZIP downloads, compile PHP with the <code>--enable-zip</code> flag.'), Alert::ERROR);
 				}
-				return false;
 			}
 			return true;
 		}
@@ -46,7 +45,11 @@
 		public function appendPreferences($context){
 
 			if(isset($_POST['action']['download-zip'])){
-				$this->__downloadZip();
+				if(class_exists('ZipArchive')){
+					$this->__downloadZip();
+				} else {
+					Administration::instance()->Page->pageAlert(__('Export Ensemble is not able to download ZIP archives, since the "<a href="http://php.net/manual/en/book.zip.php">ZipArchive</a>" class is not available. To enable ZIP downloads, compile PHP with the <code>--enable-zip</code> flag. Try saving your install files instead and follow the README instructions.'), Alert::ERROR);
+				}
 			}
 
 			if(isset($_POST['action']['save-install-files'])){
@@ -64,9 +67,7 @@
 			$span->appendChild(new XMLElement('button', __('Save Install Files'), array('name' => 'action[save-install-files]', 'type' => 'submit')));
 
 			if(!class_exists('ZipArchive')){
-				$span->appendChild(
-					new XMLElement('p', '<strong>' . __('Warning: It appears you do not have the "ZipArchive" class available. Ensure that PHP was compiled with <code>--enable-zip</code>') . '</strong>')
-				);
+				$no_zip_warning = ' <strong>' . __('Warning: It appears you do not have the "ZipArchive" class available. To enable ZIP download, ensure that PHP is compiled with <code>--enable-zip</code>') . '</strong>';
 			}
 			else{
 				$span->appendChild(new XMLElement('button', __('Download ZIP'), array('name' => 'action[download-zip]', 'type' => 'submit')));
@@ -74,7 +75,7 @@
 
 			$div->appendChild($span);
 
-			$div->appendChild(new XMLElement('p', __('Save (overwrite) install files or package entire site as a <code>.zip</code> archive for download.'), array('class' => 'help')));
+			$div->appendChild(new XMLElement('p', __('Save (overwrite) install files or package entire site as a <code>.zip</code> archive for download.' . $no_zip_warning), array('class' => 'help')));
 
 			$group->appendChild($div);
 			$context['wrapper']->appendChild($group);
