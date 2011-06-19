@@ -3,8 +3,8 @@
 This extension exports your Symphony website.
 It is part of the Symphony core download package.
 
-- Version: 1.15
-- Date: 22nd May 2011
+- Version: 1.16
+- Date: 18th June 2011
 - Requirements: Symphony 2.2 or above. The `Download ZIP` feature requires the ZIP module for PHP (`--enable-zip`).
 - Author: Alistair Kearney, alistair@symphony-cms.com
 - Constributors: [A list of contributors can be found in the commit history](http://github.com/symphonycms/export_ensemble/commits/master)
@@ -24,7 +24,7 @@ Information about [installing and updating extensions](http://symphony-cms.com/l
 
 ## Usage
 
-As of version 1.15, the Export Ensemble extension is able to save all tables needed to recreate the entire site, excluding sensitive author data and cache data. There are two options for creating ensembles: `Save Install Files` or `Download ZIP`. If you don't have the ZipArchive module enabled for PHP, it would still be possible to manually create an ensemble. 
+The Export Ensemble extension is able to save all tables needed to recreate the entire site, excluding sensitive author data and cache data. There are two options for creating ensembles: `Save Install Files` or `Download ZIP`. If you don't have the ZipArchive module enabled for PHP, it would still be possible to manually create an ensemble. 
 
 ### Save Install Files
 
@@ -104,6 +104,10 @@ To manually create an ensemble:
 **Note**: If you are using the Members extension, be sure to delete all entries in that section before saving the install files or you may be inadvertently sharing sensitive user information with your ensemble. It's up to you whether you want to share the Git repositories, but be careful that you don't include repositories that include sensitive information. Keep in mind that the workspace and each extension may also include hidden files for managing Git repositories.
 
 ## Change Log
+
+**Version 1.16**
+
+- Enable creation of install files if they do not already exist
 
 **Version 1.15**
 
