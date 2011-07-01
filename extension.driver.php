@@ -5,8 +5,8 @@
 		public function about(){
 			return array(
 				'name' => 'Export Ensemble',
-				'version' => '1.15',
-				'release-date' => '2011-05-22',
+				'version' => '1.16',
+				'release-date' => '2011-06-18',
 				'author' => array(
 					array(
 						'name' => 'Alistair Kearney',
@@ -126,36 +126,23 @@
 			$install_file = $this->__createInstallFile();
 
 			## Write the install files
-			if(!is_writable(DOCROOT . '/install.sql') || !is_writable(DOCROOT . '/workspace/install.sql') || !is_writable(DOCROOT . '/install.php')) {
-			
-				Administration::instance()->Page->pageAlert(__('Check permissions for the install files. At least one of the files is not writable.'), Alert::ERROR);
-	
-			} else {
-			
-				try {
-					file_put_contents(DOCROOT . '/install.sql', $sql_schema);
-				}
-				catch (Exception $e) {
-					Administration::instance()->Page->pageAlert(__('An error occurred while trying to write the install files: ' . $e->getMessage()), Alert::ERROR);
-				}
-				try {
-					file_put_contents(DOCROOT . '/workspace/install.sql', $sql_data);
-				}
-				catch (Exception $e) {
-					Administration::instance()->Page->pageAlert(__('An error occurred while trying to write the install files: ' . $e->getMessage()), Alert::ERROR);
-				}
-				try {
-					file_put_contents(DOCROOT . '/install.php', $install_file);
-				}
-				catch (Exception $e) {
-					Administration::instance()->Page->pageAlert(__('An error occurred while trying to write the install files: ' . $e->getMessage()), Alert::ERROR);
-				}
-	
-				Administration::instance()->Page->pageAlert(__('The install files were successfully saved.'), Alert::SUCCESS);
-
+			if(FALSE !== @file_put_contents(DOCROOT . '/install.sql', $sql_schema));
+			else {
+				Administration::instance()->Page->pageAlert(__('An error occurred while trying to write the <code>install.sql</code> file. Check the file permissions.'), Alert::ERROR);
+				return;
+			}
+			if(FALSE !== @file_put_contents(DOCROOT . '/install.php', $install_file));
+			else {
+				Administration::instance()->Page->pageAlert(__('An error occurred while trying to write the <code>install.php</code> file. Check the file permissions.'), Alert::ERROR);
+				return;
+			}
+			if(FALSE !== @file_put_contents(DOCROOT . '/workspace/install.sql', $sql_data));
+			else {
+				Administration::instance()->Page->pageAlert(__('An error occurred while trying to write the <code>workspace/install.sql</code> file. Check the file permissions.'), Alert::ERROR);
+				return;
 			}
 			
-
+			Administration::instance()->Page->pageAlert(__('The install files were successfully saved.'), Alert::SUCCESS);
 		}
 
 		private function __getDatabaseTables($tbl_prefix){
