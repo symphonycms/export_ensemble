@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension id="export_ensemble">
+	<name>Export Ensemble</name>
+	<description>Export your Symphony website as an installer package.</description>
+	<repo type="github">https://github.com/symphonycms/export_ensemble</repo>
+	<url type="discuss">http://symphony-cms.com/discuss/thread/32777/</url>
+	<types>
+		<type>Workflow</type>
+	</types>
+	<authors>
+		<author>
+			<name github="symphonycms" symphony="team">Symphony Team</name>
+			<website>http://symphony-cms.com</website>
+		</author>
+	</authors>
+	<releases>
+		<release version="1.16" date="2011-06-18" min="2.0.6" />
+	</releases>
+</extension>
