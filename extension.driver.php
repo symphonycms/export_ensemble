@@ -98,11 +98,11 @@
 			$sql_schema = $this->__dumpSchema($dump, $structure_tables, $tbl_prefix);
 			$sql_data = $this->__dumpData($dump, $data_tables, $tbl_prefix);
 
-			## Create install.php file
-			$install_template = $this->__createInstallFile();
+			## Create config_default.php file
+			$config_template = $this->__createDefaultConfigFile();
 
 			## Package ZIP archive
-			$this->__createZipArchive($install_template, $sql_schema, $sql_data);
+			$this->__createZipArchive($config_template, $sql_schema, $sql_data);
 
 		}
 
@@ -122,8 +122,8 @@
 			$sql_schema = $this->__dumpSchema($dump, $structure_tables, $tbl_prefix);
 			$sql_data = $this->__dumpData($dump, $data_tables, $tbl_prefix);
 
-			## Create install.php file
-			$install_file = $this->__createInstallFile();
+			## Create config_template.php file
+			$config_template = $this->__createDefaultConfigFile();
 
 			## Write the install files
 			if(FALSE !== @file_put_contents(DOCROOT . '/install/includes/install.sql', $sql_schema));
@@ -131,9 +131,9 @@
 				Administration::instance()->Page->pageAlert(__('An error occurred while trying to write the <code>install.sql</code> file. Check the file permissions.'), Alert::ERROR);
 				return;
 			}
-			if(FALSE !== @file_put_contents(DOCROOT . '/install.php', $install_file));
+			if(FALSE !== @file_put_contents(DOCROOT . '/install/includes/config_default.php', $config_template));
 			else {
-				Administration::instance()->Page->pageAlert(__('An error occurred while trying to write the <code>install.php</code> file. Check the file permissions.'), Alert::ERROR);
+				Administration::instance()->Page->pageAlert(__('An error occurred while trying to write the <code>config_default.php</code> file. Check the file permissions.'), Alert::ERROR);
 				return;
 			}
 			if(FALSE !== @file_put_contents(DOCROOT . '/workspace/install.sql', $sql_data));
@@ -257,7 +257,7 @@
 
 		}
 
-		private function __createInstallFile(){
+		private function __createDefaultConfigFile(){
 
 			$config_string = NULL;
 			$config = Symphony::Configuration()->get();
@@ -292,7 +292,7 @@
 				}
 			}
 
-			$install_template = str_replace(
+			$config_template = str_replace(
 				array(
 					'<!-- VERSION -->',
 					'<!-- CONFIGURATION -->'
@@ -306,11 +306,11 @@
 				file_get_contents(dirname(__FILE__) . '/lib/installer.tpl')
 			);
 
-			return $install_template;
+			return $config_template;
 
 		}
 
-		private function __createZipArchive($install_template, $sql_schema, $sql_data){
+		private function __createZipArchive($config_template, $sql_schema, $sql_data){
 
 			if (!is_writable(DOCROOT . '/manifest/tmp')) {
 
@@ -327,7 +327,7 @@
 					$this->__addFolderToArchive($archive, SYMPHONY, DOCROOT);
 					$this->__addFolderToArchive($archive, WORKSPACE, DOCROOT);
 	
-					$archive->addFromString('install.php', $install_template);
+					$archive->addFromString('install/includes/config_default.php', $config_template);
 					$archive->addFromString('install/includes/install.sql', $sql_schema);
 					$archive->addFromString('workspace/install.sql', $sql_data);
 	
