@@ -288,7 +288,7 @@
 
 			foreach($config as $group => $set){
 				foreach($set as $key => $val){
-					$config_string .= "		\$conf['{$group}']['{$key}'] = '{$val}';" . self::CRLF;
+					$config_string .= "		\$conf['{$group}']['{$key}'] = '{$val}';" . PHP_EOL;
 				}
 			}
 
