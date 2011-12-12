@@ -262,36 +262,26 @@
 			$config_string = NULL;
 			$config = Symphony::Configuration()->get();
 
-			unset($config['symphony']['build']);
-			unset($config['symphony']['cookie_prefix']);
-			unset($config['general']['useragent']);
-			unset($config['file']['write_mode']);
-			unset($config['directory']['write_mode']);
-			unset($config['database']['host']);
-			unset($config['database']['port']);
-			unset($config['database']['user']);
-			unset($config['database']['password']);
-			unset($config['database']['db']);
-			unset($config['database']['tbl_prefix']);
-			unset($config['region']['timezone']);
-			unset($config['email']['default_gateway']);
-			unset($config['email_sendmail']['from_name']);
-			unset($config['email_sendmail']['from_address']);
-			unset($config['email_smtp']['from_name']);
-			unset($config['email_smtp']['from_address']);
-			unset($config['email_smtp']['host']);
-			unset($config['email_smtp']['port']);
-			unset($config['email_smtp']['secure']);
-			unset($config['email_smtp']['auth']);
-			unset($config['email_smtp']['username']);
-			unset($config['email_smtp']['password']);
-			
 			Symphony::Configuration()->setArray($config);
+
+			// Set defaults for database settings
+			Symphony::Configuration()->set('host', 'localhost', 'database');
+			Symphony::Configuration()->set('port', '3306', 'database');
+			Symphony::Configuration()->set('user', '', 'database');
+			Symphony::Configuration()->set('password', '', 'database');
+			Symphony::Configuration()->set('db', '', 'database');
+			Symphony::Configuration()->set('tbl_prefix', 'sym_', 'database');
+
+			// Remove email settings
+			Symphony::Configuration()->remove('email');
+			Symphony::Configuration()->remove('email_sendmail');
+			Symphony::Configuration()->remove('email_smtp');
+
 			$config_settings = Symphony::Configuration()->__toString();
 			
-			$config_template = "<?php\n\t\$settings = " . $config_settings . ";\n";
+			$default_config = "<?php\n\t\$settings = " . $config_settings . ";\n";
 
-			return $config_template;
+			return $default_config;
 
 		}
 
