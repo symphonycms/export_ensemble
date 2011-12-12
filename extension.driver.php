@@ -285,26 +285,11 @@
 			unset($config['email_smtp']['auth']);
 			unset($config['email_smtp']['username']);
 			unset($config['email_smtp']['password']);
-
-			foreach($config as $group => $set){
-				foreach($set as $key => $val){
-					$config_string .= "		\$conf['{$group}']['{$key}'] = '{$val}';" . PHP_EOL;
-				}
-			}
-
-			$config_template = str_replace(
-				array(
-					'<!-- VERSION -->',
-					'<!-- CONFIGURATION -->'
-				),
-
-				array(
-					Symphony::Configuration()->get('version', 'symphony'),
-					trim($config_string),
-				),
-
-				file_get_contents(dirname(__FILE__) . '/lib/installer.tpl')
-			);
+			
+			Symphony::Configuration()->setArray($config);
+			$config_settings = Symphony::Configuration()->__toString();
+			
+			$config_template = "<?php\n\t\$settings = " . $config_settings . ";\n";
 
 			return $config_template;
 
