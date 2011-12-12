@@ -126,7 +126,7 @@
 			$install_file = $this->__createInstallFile();
 
 			## Write the install files
-			if(FALSE !== @file_put_contents(DOCROOT . '/install.sql', $sql_schema));
+			if(FALSE !== @file_put_contents(DOCROOT . '/install/includes/install.sql', $sql_schema));
 			else {
 				Administration::instance()->Page->pageAlert(__('An error occurred while trying to write the <code>install.sql</code> file. Check the file permissions.'), Alert::ERROR);
 				return;
@@ -328,7 +328,7 @@
 					$this->__addFolderToArchive($archive, WORKSPACE, DOCROOT);
 	
 					$archive->addFromString('install.php', $install_template);
-					$archive->addFromString('install.sql', $sql_schema);
+					$archive->addFromString('install/includes/install.sql', $sql_schema);
 					$archive->addFromString('workspace/install.sql', $sql_data);
 	
 					$archive->addFile(DOCROOT . '/index.php', 'index.php');
