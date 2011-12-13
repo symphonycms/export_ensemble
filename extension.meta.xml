@@ -12,8 +12,12 @@
 			<name github="symphonycms" symphony="team">Symphony Team</name>
 			<website>http://symphony-cms.com</website>
 		</author>
+		<author>
+			<name github="bauhouse" symphony="bauhouse">Stephen Bau</name>
+			<website>http://domain7.com</website>
+		</author>
 	</authors>
 	<releases>
-		<release version="1.16" date="2011-06-18" min="2.0.6" />
+		<release version="2.0" date="2011-12-13" min="2.3" />
 	</releases>
 </extension>
