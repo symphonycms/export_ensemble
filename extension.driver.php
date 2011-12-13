@@ -44,16 +44,32 @@
 
 		public function appendPreferences($context){
 
-			if(isset($_POST['action']['download-zip'])){
-				if(class_exists('ZipArchive')){
-					$this->__downloadZip();
-				} else {
-					Administration::instance()->Page->pageAlert(__('Export Ensemble is not able to download ZIP archives, since the "<a href="http://php.net/manual/en/book.zip.php">ZipArchive</a>" class is not available. To enable ZIP downloads, compile PHP with the <code>--enable-zip</code> flag. Try saving your install files instead and follow the README instructions.'), Alert::ERROR);
-				}
+			// Test whether the install directory exists
+			if(!is_dir(DOCROOT . '/blah/')){
+				$no_install_dir_message = 'Export Ensemble is not able to create ensembles without a complete <code>install</code> directory. Please refer to the <code>README</code> file for usage instructions.';
+				$no_install_dir_warning = ' <strong>Warning: It appears you do not have an <code>install</code> directory.</strong> ' . __($no_install_dir_message);
 			}
 
-			if(isset($_POST['action']['save-install-files'])){
-				$this->__saveInstallFiles();
+			// If Export Ensemble button is pressed
+			// Test whether the install directory exists
+			if(isset($_POST['action']) && !is_dir(DOCROOT . '/blah/')){
+				Administration::instance()->Page->pageAlert(__($no_install_dir_message), Alert::ERROR);
+			} else {
+
+				// Download the ZIP file
+				if(isset($_POST['action']['download-zip'])){
+					if(class_exists('ZipArchive')){
+						$this->__downloadZip();
+					} else {
+						Administration::instance()->Page->pageAlert(__('Export Ensemble is not able to download ZIP archives, since the "<a href="http://php.net/manual/en/book.zip.php">ZipArchive</a>" class is not available. To enable ZIP downloads, compile PHP with the <code>--enable-zip</code> flag. Try saving your install files instead and follow the README instructions.'), Alert::ERROR);
+					}
+				}
+	
+				// Save the install files
+				if(isset($_POST['action']['save-install-files'])){
+					$this->__saveInstallFiles();
+				}
+
 			}
 
 			$group = new XMLElement('fieldset');
@@ -75,7 +91,7 @@
 
 			$div->appendChild($span);
 
-			$div->appendChild(new XMLElement('p', __('Save (overwrite) install files or package entire site as a <code>.zip</code> archive for download.' . $no_zip_warning), array('class' => 'help')));
+			$div->appendChild(new XMLElement('p', __('Save (overwrite) install files or package entire site as a <code>.zip</code> archive for download.' . $no_zip_warning . $no_install_dir_warning), array('class' => 'help')));
 
 			$group->appendChild($div);
 			$context['wrapper']->appendChild($group);
