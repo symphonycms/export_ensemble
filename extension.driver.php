@@ -298,9 +298,10 @@
 	
 				if ($res === TRUE) {
 	
-					$this->__addFolderToArchive($archive, EXTENSIONS, DOCROOT);
-					$this->__addFolderToArchive($archive, SYMPHONY, DOCROOT);
-					$this->__addFolderToArchive($archive, WORKSPACE, DOCROOT);
+					$this->__addFolderToArchive($archive, 'extensions', DOCROOT);
+					$this->__addFolderToArchive($archive, 'symphony', DOCROOT);
+					$this->__addFolderToArchive($archive, 'workspace', DOCROOT);
+					$this->__addFolderToArchive($archive, 'install', DOCROOT);
 	
 					$archive->addFromString('install/includes/config_default.php', $config_template);
 					$archive->addFromString('install/includes/install.sql', $sql_schema);
