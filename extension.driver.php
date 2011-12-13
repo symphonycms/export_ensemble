@@ -50,14 +50,14 @@
 		public function appendPreferences($context){
 
 			// Test whether the install directory exists
-			if(!is_dir(DOCROOT . '/blah/')){
+			if(!is_dir(DOCROOT . '/install/')){
 				$no_install_dir_message = 'Export Ensemble is not able to create ensembles without a complete <code>install</code> directory. Please refer to the <code>README</code> file for usage instructions.';
 				$no_install_dir_warning = ' <strong>Warning: It appears you do not have an <code>install</code> directory.</strong> ' . __($no_install_dir_message);
 			}
 
 			// If Export Ensemble button is pressed
 			// Test whether the install directory exists
-			if(isset($_POST['action']) && !is_dir(DOCROOT . '/blah/')){
+			if(isset($_POST['action']) && !is_dir(DOCROOT . '/install/')){
 				Administration::instance()->Page->pageAlert(__($no_install_dir_message), Alert::ERROR);
 			} else {
 
