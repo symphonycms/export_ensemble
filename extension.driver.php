@@ -5,8 +5,8 @@
 		public function about(){
 			return array(
 				'name' => 'Export Ensemble',
-				'version' => '1.16',
-				'release-date' => '2011-06-18',
+				'version' => '2.0',
+				'release-date' => '2011-12-13',
 				'author' => array(
 					array(
 						'name' => 'Alistair Kearney',
@@ -17,6 +17,11 @@
 						'name' => 'Symphony Team',
 						'website' => 'http://symphony-cms.com',
 						'email' => 'team@symphony-cms.com'
+					),
+					array(
+						'name' => 'Stephen Bau',
+						'website' => 'http://domain7.com',
+						'email' => 'stephen@domain7.com'
 					)
 				)
 			);
