@@ -5,8 +5,8 @@
 		public function about(){
 			return array(
 				'name' => 'Export Ensemble',
-				'version' => '1.16',
-				'release-date' => '2011-06-18',
+				'version' => '2.0',
+				'release-date' => '2011-12-13',
 				'author' => array(
 					array(
 						'name' => 'Alistair Kearney',
@@ -17,6 +17,11 @@
 						'name' => 'Symphony Team',
 						'website' => 'http://symphony-cms.com',
 						'email' => 'team@symphony-cms.com'
+					),
+					array(
+						'name' => 'Stephen Bau',
+						'website' => 'http://domain7.com',
+						'email' => 'stephen@domain7.com'
 					)
 				)
 			);
@@ -44,16 +49,32 @@
 
 		public function appendPreferences($context){
 
-			if(isset($_POST['action']['download-zip'])){
-				if(class_exists('ZipArchive')){
-					$this->__downloadZip();
-				} else {
-					Administration::instance()->Page->pageAlert(__('Export Ensemble is not able to download ZIP archives, since the "<a href="http://php.net/manual/en/book.zip.php">ZipArchive</a>" class is not available. To enable ZIP downloads, compile PHP with the <code>--enable-zip</code> flag. Try saving your install files instead and follow the README instructions.'), Alert::ERROR);
-				}
+			// Test whether the install directory exists
+			if(!is_dir(DOCROOT . '/install/')){
+				$no_install_dir_message = 'Export Ensemble is not able to create ensembles without a complete <code>install</code> directory. Please refer to the <code>README</code> file for usage instructions.';
+				$no_install_dir_warning = ' <strong>Warning: It appears you do not have an <code>install</code> directory.</strong> ' . __($no_install_dir_message);
 			}
 
-			if(isset($_POST['action']['save-install-files'])){
-				$this->__saveInstallFiles();
+			// If Export Ensemble button is pressed
+			// Test whether the install directory exists
+			if(isset($_POST['action']) && !is_dir(DOCROOT . '/install/')){
+				Administration::instance()->Page->pageAlert(__($no_install_dir_message), Alert::ERROR);
+			} else {
+
+				// Download the ZIP file
+				if(isset($_POST['action']['download-zip'])){
+					if(class_exists('ZipArchive')){
+						$this->__downloadZip();
+					} else {
+						Administration::instance()->Page->pageAlert(__('Export Ensemble is not able to download ZIP archives, since the "<a href="http://php.net/manual/en/book.zip.php">ZipArchive</a>" class is not available. To enable ZIP downloads, compile PHP with the <code>--enable-zip</code> flag. Try saving your install files instead and follow the README instructions.'), Alert::ERROR);
+					}
+				}
+	
+				// Save the install files
+				if(isset($_POST['action']['save-install-files'])){
+					$this->__saveInstallFiles();
+				}
+
 			}
 
 			$group = new XMLElement('fieldset');
@@ -75,7 +96,7 @@
 
 			$div->appendChild($span);
 
-			$div->appendChild(new XMLElement('p', __('Save (overwrite) install files or package entire site as a <code>.zip</code> archive for download.' . $no_zip_warning), array('class' => 'help')));
+			$div->appendChild(new XMLElement('p', __('Save (overwrite) install files or package entire site as a <code>.zip</code> archive for download.' . $no_zip_warning . $no_install_dir_warning), array('class' => 'help')));
 
 			$group->appendChild($div);
 			$context['wrapper']->appendChild($group);
@@ -98,11 +119,11 @@
 			$sql_schema = $this->__dumpSchema($dump, $structure_tables, $tbl_prefix);
 			$sql_data = $this->__dumpData($dump, $data_tables, $tbl_prefix);
 
-			## Create install.php file
-			$install_template = $this->__createInstallFile();
+			## Create config_default.php file
+			$config_template = $this->__createDefaultConfigFile();
 
 			## Package ZIP archive
-			$this->__createZipArchive($install_template, $sql_schema, $sql_data);
+			$this->__createZipArchive($config_template, $sql_schema, $sql_data);
 
 		}
 
@@ -122,18 +143,18 @@
 			$sql_schema = $this->__dumpSchema($dump, $structure_tables, $tbl_prefix);
 			$sql_data = $this->__dumpData($dump, $data_tables, $tbl_prefix);
 
-			## Create install.php file
-			$install_file = $this->__createInstallFile();
+			## Create config_template.php file
+			$config_template = $this->__createDefaultConfigFile();
 
 			## Write the install files
-			if(FALSE !== @file_put_contents(DOCROOT . '/install.sql', $sql_schema));
+			if(FALSE !== @file_put_contents(DOCROOT . '/install/includes/install.sql', $sql_schema));
 			else {
 				Administration::instance()->Page->pageAlert(__('An error occurred while trying to write the <code>install.sql</code> file. Check the file permissions.'), Alert::ERROR);
 				return;
 			}
-			if(FALSE !== @file_put_contents(DOCROOT . '/install.php', $install_file));
+			if(FALSE !== @file_put_contents(DOCROOT . '/install/includes/config_default.php', $config_template));
 			else {
-				Administration::instance()->Page->pageAlert(__('An error occurred while trying to write the <code>install.php</code> file. Check the file permissions.'), Alert::ERROR);
+				Administration::instance()->Page->pageAlert(__('An error occurred while trying to write the <code>config_default.php</code> file. Check the file permissions.'), Alert::ERROR);
 				return;
 			}
 			if(FALSE !== @file_put_contents(DOCROOT . '/workspace/install.sql', $sql_data));
@@ -257,60 +278,35 @@
 
 		}
 
-		private function __createInstallFile(){
+		private function __createDefaultConfigFile(){
 
 			$config_string = NULL;
 			$config = Symphony::Configuration()->get();
 
-			unset($config['symphony']['build']);
-			unset($config['symphony']['cookie_prefix']);
-			unset($config['general']['useragent']);
-			unset($config['file']['write_mode']);
-			unset($config['directory']['write_mode']);
-			unset($config['database']['host']);
-			unset($config['database']['port']);
-			unset($config['database']['user']);
-			unset($config['database']['password']);
-			unset($config['database']['db']);
-			unset($config['database']['tbl_prefix']);
-			unset($config['region']['timezone']);
-			unset($config['email']['default_gateway']);
-			unset($config['email_sendmail']['from_name']);
-			unset($config['email_sendmail']['from_address']);
-			unset($config['email_smtp']['from_name']);
-			unset($config['email_smtp']['from_address']);
-			unset($config['email_smtp']['host']);
-			unset($config['email_smtp']['port']);
-			unset($config['email_smtp']['secure']);
-			unset($config['email_smtp']['auth']);
-			unset($config['email_smtp']['username']);
-			unset($config['email_smtp']['password']);
+			Symphony::Configuration()->setArray($config);
 
-			foreach($config as $group => $set){
-				foreach($set as $key => $val){
-					$config_string .= "		\$conf['{$group}']['{$key}'] = '{$val}';" . self::CRLF;
-				}
-			}
+			// Set defaults for database settings
+			Symphony::Configuration()->set('host', 'localhost', 'database');
+			Symphony::Configuration()->set('port', '3306', 'database');
+			Symphony::Configuration()->set('user', '', 'database');
+			Symphony::Configuration()->set('password', '', 'database');
+			Symphony::Configuration()->set('db', '', 'database');
+			Symphony::Configuration()->set('tbl_prefix', 'sym_', 'database');
 
-			$install_template = str_replace(
-				array(
-					'<!-- VERSION -->',
-					'<!-- CONFIGURATION -->'
-				),
+			// Remove email settings
+			Symphony::Configuration()->remove('email');
+			Symphony::Configuration()->remove('email_sendmail');
+			Symphony::Configuration()->remove('email_smtp');
 
-				array(
-					Symphony::Configuration()->get('version', 'symphony'),
-					trim($config_string),
-				),
+			$config_settings = Symphony::Configuration()->__toString();
+			
+			$default_config = "<?php\n\t\$settings = " . $config_settings . ";\n";
 
-				file_get_contents(dirname(__FILE__) . '/lib/installer.tpl')
-			);
-
-			return $install_template;
+			return $default_config;
 
 		}
 
-		private function __createZipArchive($install_template, $sql_schema, $sql_data){
+		private function __createZipArchive($config_template, $sql_schema, $sql_data){
 
 			if (!is_writable(DOCROOT . '/manifest/tmp')) {
 
@@ -323,12 +319,13 @@
 	
 				if ($res === TRUE) {
 	
-					$this->__addFolderToArchive($archive, EXTENSIONS, DOCROOT);
-					$this->__addFolderToArchive($archive, SYMPHONY, DOCROOT);
-					$this->__addFolderToArchive($archive, WORKSPACE, DOCROOT);
+					$this->__addFolderToArchive($archive, 'extensions', DOCROOT);
+					$this->__addFolderToArchive($archive, 'symphony', DOCROOT);
+					$this->__addFolderToArchive($archive, 'workspace', DOCROOT);
+					$this->__addFolderToArchive($archive, 'install', DOCROOT);
 	
-					$archive->addFromString('install.php', $install_template);
-					$archive->addFromString('install.sql', $sql_schema);
+					$archive->addFromString('install/includes/config_default.php', $config_template);
+					$archive->addFromString('install/includes/install.sql', $sql_schema);
 					$archive->addFromString('workspace/install.sql', $sql_data);
 	
 					$archive->addFile(DOCROOT . '/index.php', 'index.php');

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extension id="export_ensemble" status="released" xmlns="http://symphony-cms.com/schemas/extension/1.0">
 	<name>Export Ensemble</name>
-	<description>Package your site as a `.zip`</description>
+	<description>Export your Symphony website as an installer package.</description>
 	<repo type="github">https://github.com/symphonycms/export_ensemble</repo>
 	<url type="discuss">http://symphony-cms.com/discuss/thread/32777/</url>
 	<types>
@@ -14,9 +14,18 @@
 		</author>
 		<author>
 			<name github="bauhouse" symphony="bauhouse">Stephen Bau</name>
+			<website>http://domain7.com</website>
 		</author>
 	</authors>
 	<releases>
+		<release version="2.0" date="unreleased" min="2.3">
+			- Update extension for Symphony 2.3
+			- Updates break compatibility with previous versions of Symphony
+			- The extension now overwrites the `install/includes/config_default.php` and `install/includes/install.sql` files
+			- Requires a complete `install` directory
+			- Add a test to ensure the `install` directory exists (the responsibility to ensure the directory is complete is the developer's)
+			- Add `extension.meta.xml` file
+		</release>
 		<release version="1.16" date="2011-06-18" min="2.2" max="2.2.x">
 			- Enable creation of install files if they do not already exist
 		</release>
