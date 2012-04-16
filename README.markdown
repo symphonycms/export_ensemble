@@ -4,7 +4,7 @@ This extension exports your Symphony website.
 It is part of the Symphony core download package.
 
 - Version: 2.0
-- Date: unreleased
+- Date: 2012-04-16
 - Requirements: Symphony 2.3 or above. The `Download ZIP` feature requires the ZIP module for PHP (`--enable-zip`).
 - Author: Alistair Kearney, alistair@symphony-cms.com
 - Constributors: [A list of contributors can be found in the commit history](http://github.com/symphonycms/export_ensemble/commits/master)

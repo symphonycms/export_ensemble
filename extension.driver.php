@@ -6,7 +6,7 @@
 			return array(
 				'name' => 'Export Ensemble',
 				'version' => '2.0',
-				'release-date' => '2011-12-13',
+				'release-date' => '2012-04-16',
 				'author' => array(
 					array(
 						'name' => 'Alistair Kearney',
