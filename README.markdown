@@ -24,7 +24,7 @@ Information about [installing and updating extensions](http://symphony-cms.com/l
 
 ## Usage
 
-The Export Ensemble extension is able to save all tables needed to recreate the entire site, excluding sensitive author data and cache data. There are two options for creating ensembles: `Save Install Files` or `Download ZIP`. If you don't have the ZipArchive module enabled for PHP, it would still be possible to manually create an ensemble.
+The Export Ensemble extension is able to save all tables needed to recreate the entire site, excluding sensitive author data and cache data. There are two options for creating ensembles: `Save Install Files` or `Download ZIP`. If you don't have the `ZipArchive` module enabled for PHP, it would still be possible to manually create an ensemble.
 
 Symphony 2.3 introduces the `install` directory, and because of the complexity of the new installer, it is a requirement that a complete `install` directory exist to use the Export Ensemble extension. Pull the official Git repository or download the official ZIP file for the Symphony 2.3 release if you don't already have an `install` directory.
 
@@ -104,4 +104,3 @@ To manually create an ensemble:
 5. Share your ensemble
 
 **Note**: If you are using the Members extension, be sure to delete all entries in that section before saving the install files or you may be inadvertently sharing sensitive user information with your ensemble. It's up to you whether you want to share the Git repositories, but be careful that you don't include repositories that include sensitive information. Keep in mind that the workspace and each extension may also include hidden files for managing Git repositories.
-
