@@ -2,31 +2,6 @@
 
 	Class extension_export_ensemble extends Extension{
 
-		public function about(){
-			return array(
-				'name' => 'Export Ensemble',
-				'version' => '2.0',
-				'release-date' => '2012-04-16',
-				'author' => array(
-					array(
-						'name' => 'Alistair Kearney',
-						'website' => 'http://pointybeard.com',
-						'email' => 'alistair@pointybeard.com'
-					),
-					array(
-						'name' => 'Symphony Team',
-						'website' => 'http://symphony-cms.com',
-						'email' => 'team@symphony-cms.com'
-					),
-					array(
-						'name' => 'Stephen Bau',
-						'website' => 'http://domain7.com',
-						'email' => 'stephen@domain7.com'
-					)
-				)
-			);
-		}
-
 		public function getSubscribedDelegates(){
 			return array(
 				array(
