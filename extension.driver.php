@@ -21,7 +21,6 @@
 			return true;
 		}
 
-
 		public function appendPreferences($context){
 			// Test whether the install directory exists
 			if(!is_dir(DOCROOT . '/install/')){

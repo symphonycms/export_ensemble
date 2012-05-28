@@ -3,8 +3,8 @@
 This extension exports your Symphony website.
 It is part of the Symphony core download package.
 
-- Version: 2.0
-- Date: 21st May 2012
+- Version: 2.0.1
+- Date: 28th May 2012
 - Requirements: Symphony 2.3 or above. The `Download ZIP` feature requires the ZIP module for PHP (`--enable-zip`).
 - Author: Alistair Kearney, alistair@symphony-cms.com
 - GitHub Repository: <http://github.com/symphonycms/export_ensemble>
@@ -97,9 +97,9 @@ Click on the `Download ZIP` button to export an ensemble as a ZIP archive. All t
 To manually create an ensemble: 
 
 1. Click on the `Save Install Files` button
-2. Copy the install directory
+2. Copy the `/install` directory
 3. Remove all files in the `Excluded Files and Directories` list above
-4. Create an archive of the install directory
+4. Create an archive of the `/install` directory
 5. Share your ensemble
 
 **Note**: If you are using the Members extension, be sure to delete all entries in that section before saving the install files or you may be inadvertently sharing sensitive user information with your ensemble. It's up to you whether you want to share the Git repositories, but be careful that you don't include repositories that include sensitive information. Keep in mind that the workspace and each extension may also include hidden files for managing Git repositories.
