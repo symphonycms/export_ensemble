@@ -211,7 +211,13 @@
 			// Grab the schema
 			foreach($structure_tables as $t) $sql_schema .= $dump->export($t, MySQLDump::STRUCTURE_ONLY);
 
-			$sql_schema = preg_replace('/(DROP TABLE IF EXISTS | CREATE TABLE )`' . $tbl_prefix . '/i', '$1`tbl_', $sql_schema);
+			// Replace the current prefix with the default Symphony prefix
+			$sql_schema = preg_replace(
+				'/(DROP TABLE IF EXISTS|CREATE TABLE|INSERT INTO) `' . $tbl_prefix . '/i',
+				'$1`tbl_', $sql_schema
+			);
+
+			// Remove any AUTO_INCREMENT counts
 			$sql_schema = preg_replace('/AUTO_INCREMENT=\d+/i', NULL, $sql_schema);
 
 			return $sql_schema;
@@ -230,7 +236,11 @@
 				$sql_data .= $dump->export($t, MySQLDump::DATA_ONLY);
 			}
 
-			$sql_data = str_replace('`' . $tbl_prefix, '`tbl_', $sql_data);
+			// Replace the current prefix with the default Symphony prefix
+			$sql_data = preg_replace(
+				'/(DROP TABLE IF EXISTS|CREATE TABLE|INSERT INTO) `' . $tbl_prefix . '/i',
+				'$1`tbl_', $sql_data
+			);
 
 			return $sql_data;
 		}
