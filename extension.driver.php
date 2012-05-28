@@ -299,6 +299,10 @@
 					if(is_file(DOCROOT . '/README')) $archive->addFile(DOCROOT . '/README', 'README');
 					if(is_file(DOCROOT . '/LICENCE')) $archive->addFile(DOCROOT . '/LICENCE', 'LICENCE');
 					if(is_file(DOCROOT . '/update.php')) $archive->addFile(DOCROOT . '/update.php', 'update.php');
+
+					// Remove logs
+					$archive->deleteName('install/logs/install');
+					$archive->deleteName('install/logs/update');
 				}
 
 				$archive->close();
