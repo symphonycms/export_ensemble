@@ -237,7 +237,7 @@
 
 			// Replace the current prefix with the default Symphony prefix
 			$sql_data = preg_replace(
-				'/(DROP TABLE IF EXISTS|CREATE TABLE|INSERT INTO) `' . $tbl_prefix . '/i',
+				'/(DROP TABLE IF EXISTS|CREATE TABLE|INSERT INTO|STRUCTURE:|DATA:) `' . $tbl_prefix . '/i',
 				'$1`tbl_', $sql_data
 			);
 
