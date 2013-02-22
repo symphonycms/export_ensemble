@@ -18,6 +18,11 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="2.0.2" date="2013-02-22" min="2.3">
+			- Updated Russian language
+			- Fix some PHP notices
+			- Replace database prefix in the SQL comments
+		</release>
 		<release version="2.0.1" date="2012-05-28" min="2.3">
 			- Fix bug where table prefix could not be overridden
 			- Prevent the installation logs from being added to the ensemble
