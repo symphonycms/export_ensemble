@@ -3,11 +3,6 @@
 This extension exports your Symphony website.
 It is part of the Symphony core download package.
 
-- Version: 2.0.3
-- Author: Symphony Team
-- Release Date: 1 July 2013
-- Requirements: Symphony 2.3 or above. The `Download ZIP` feature requires the ZIP module for PHP (`--enable-zip`)
-
 ## Synopsis
 
 This extension will create an installable version of your Symphony install useful for distribution. The resultant archive contains an install directory with a `install/includes/config_default.php`, `install/includes/install.sql` and `workspace/install.sql` files. This is how official Symphony releases are created.
