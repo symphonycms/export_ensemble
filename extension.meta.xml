@@ -18,7 +18,7 @@
 		</author>
 	</authors>
 	<releases>
-		<release version="2.1" date="2014-08-17" min="2.4" max="2.5">
+		<release version="2.1" date="2014-08-17" min="2.4" max="2.5.x">
 			- Mark Symphony 2.4+ compatibility
 			- [#19](https://github.com/symphonycms/export_ensemble/issues/19) Fix error when exporting from Symphony 2.4
 		</release>
