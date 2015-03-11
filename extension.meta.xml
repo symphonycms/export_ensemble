@@ -18,6 +18,9 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="2.1.2" date="2015-03-11" min="2.4" max="2.x.x">
+			- Mark Symphony 2.6+ compatibility
+		</release>
 		<release version="2.1.1" date="2014-10-30" min="2.4" max="2.5.x">
 			- Mark Symphony 2.5+ compatibility
 		</release>
