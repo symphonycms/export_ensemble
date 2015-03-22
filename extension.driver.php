@@ -285,6 +285,7 @@
 					$this->__addFolderToArchive($archive, 'symphony', DOCROOT);
 					$this->__addFolderToArchive($archive, 'workspace', DOCROOT);
 					$this->__addFolderToArchive($archive, 'install', DOCROOT);
+					$this->__addFolderToArchive($archive, 'vendor', DOCROOT);
 
 					$archive->addFromString('install/includes/config_default.php', $config_template);
 					$archive->addFromString('install/includes/install.sql', $sql_schema);
