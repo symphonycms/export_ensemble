@@ -5,7 +5,7 @@
 		'author' => array(
 			'name' => 'Бирюков Александр',
 			'email' => 'info@alexbirukov.ru',
-			'website' => ''
+			'website' => 'http://alexbirukov.ru'
 		),
 		'release-date' => '2016-08-24'
 	);
