@@ -45,9 +45,6 @@
 		'Export Ensemble will not be able to download ZIP archives, since the "<a href="http://php.net/manual/en/book.zip.php">ZipArchive</a>" class is not available. To enable ZIP downloads, compile PHP with the <code>--enable-zip</code> flag.' => 
 		'Функция экспорта сборки не может создать ZIP архив, т.к. класс "<a href="http://php.net/manual/en/book.zip.php">ZipArchive</a>" недоступен. Для включения ZIP архивации необходимо скомпилировать PHP с ключом <code>--enable-zip</code>.',
 
-		'Save (overwrite) install files or package entire site as a <code>.zip</code> archive for download.' => 
-		'Сохранить (перезаписать) файлы установки в виде <code>.zip</code> архива для закачки.',
-
 		'Save Install Files' => 
 		'Сохранить установочные файлы',
 
@@ -56,5 +53,8 @@
 
 		'Warning: It appears you do not have the "ZipArchive" class available. To enable ZIP download, ensure that PHP is compiled with <code>--enable-zip</code>' => 
 		'Внимание: По всей вероятности у вас отсутствует класс "ZipArchive". Для получения возможности ZIP архивации убедитесь, что PHP скомпилирован с ключом <code>--enable-zip</code>',
+		
+		'Save (overwrite) install files or package entire site as a <code>.zip</code> archive for download.' => 
+		'Сохранить (перезаписать) файлы установки в виде <code>.zip</code> архива для закачки.',
 
 	);
