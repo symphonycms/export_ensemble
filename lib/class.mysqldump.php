@@ -1,36 +1,36 @@
 <?php
 
 	Class MySQLDump{
-	
+
 		const DATA_ONLY = 1;
 		const STRUCTURE_ONLY = 2;
 		const ALL = 3;
 		const CRLF = "\r\n";
 
 		private $_connection;
-	
+
 		public function __construct(MySQL $connection){
 			$this->_connection = $connection;
 		}
 
-		public function export($match=null, $flag=self::ALL, $condition=NULL){
-			$data = NULL;
+		public function export($match = null, $flag = self::ALL, $condition = null){
+			$data = null;
 
 			$tables = $this->__getTables($match);
 			foreach ($tables as $name => $info){
-			
+
 				if($flag == self::ALL || $flag == self::STRUCTURE_ONLY){
 					$data .= self::CRLF . "-- *** STRUCTURE: `{$name}` ***" . self::CRLF;
 					$data .= "DROP TABLE IF EXISTS `{$name}`;" . self::CRLF;
 					$data .= $this->__dumpTableSQL($name, $info['type'], $info['fields'], $info['indexes']);
 				}
-			
+
 				if($flag == self::ALL || $flag == self::DATA_ONLY){
 					$data .= self::CRLF . "-- *** DATA: `$name` ***" . self::CRLF;
 					if(strtoupper($info['type']) == 'INNODB'){
 						$data .= 'SET FOREIGN_KEY_CHECKS = 0;' . self::CRLF;
 					}
-				
+
 					$data .= $this->__dumpTableData ($name, $info['fields'], $condition);
 					if(strtoupper($info['type']) == 'INNODB'){
 						$data .= 'SET FOREIGN_KEY_CHECKS = 1;' . self::CRLF;
@@ -40,41 +40,41 @@
 
 			return $data;
 		}
-	
-		private function __dumpTableData($name, $fields, $condition=NULL){
+
+		private function __dumpTableData($name, $fields, $condition = null){
 			$fieldList = join (', ', array_map (create_function ('$x', 'return "`$x`";'), array_keys ($fields)));
-			
+
 			$query = "SELECT {$fieldList} FROM `{$name}`";
-			
+
 			if(!is_null($condition)){
 				$query .= ' WHERE ' . $condition;
 			}
-			
+
 			$rows = $this->_connection->fetch ($query);
 
-			$value = NULL;
+			$value = null;
 
-			if(!is_array($rows) || empty($rows)) return NULL;
+			if(!is_array($rows) || empty($rows)) return null;
 
 			foreach ($rows as $row){
 				$value .= "INSERT INTO `{$name}` ({$fieldList}) VALUES (";
 				$fieldValues = array();
-			
+
 				foreach ($fields as $fieldName => $info){
 					$fieldValue = $row[$fieldName];
 
 					if($info['null'] == 1 && strlen(trim($fieldValue)) == 0){
-						$fieldValues[] = 'NULL';
+						$fieldValues[] = 'null';
 					}
-					
+
 					elseif(substr($info['type'], 0, 4) == 'enum'){
 						$fieldValues[] = "'{$fieldValue}'";
 					}
-					
+
 					elseif(is_numeric ($fieldValue)){
 						$fieldValues[] = $fieldValue;
 					}
-					
+
 					else{
 						$fieldValues[] = "'" . $this->_connection->cleanValue($fieldValue) . "'";
 					}
@@ -86,7 +86,7 @@
 
 			return $value;
 		}
-	
+
 		private function __dumpTableSQL($table, $type, $fields, $indexes){
 
 			$query = "SHOW CREATE TABLE `{$table}`";
@@ -95,9 +95,9 @@
 			return $result[1] . ";" . self::CRLF;
 		}
 
-		private function __getTables($match=null){
-			$query = 'SHOW TABLES' . (!is_null($match) ? " LIKE '$match'" : NULL);
-		
+		private function __getTables($match = null){
+			$query = 'SHOW TABLES' . (!is_null($match) ? " LIKE '$match'" : null);
+
 			$rows = $this->_connection->fetch ($query);
 			$rows = array_map (create_function ('$x', 'return array_values ($x);'), $rows);
 			$tables = array_map (create_function ('$x', 'return $x[0];'), $rows);
@@ -138,7 +138,7 @@
 					'default' => $default,
 					'extra'   => $extra
 				);
-			
+
 				$result[$name] = $field;
 			}
 

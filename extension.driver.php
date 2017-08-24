@@ -58,8 +58,8 @@
 			$group->appendChild(new XMLElement('legend', __('Export Ensemble')));
 
 
-			$div = new XMLElement('div', NULL, array('id' => 'file-actions', 'class' => 'label'));
-			$span = new XMLElement('span', NULL, array('class' => 'frame'));
+			$div = new XMLElement('div', null, array('id' => 'file-actions', 'class' => 'label'));
+			$span = new XMLElement('span', null, array('class' => 'frame'));
 
 			$span->appendChild(new XMLElement('button', __('Save Install Files'), array('name' => 'action[save-install-files]', 'type' => 'submit')));
 
@@ -119,17 +119,17 @@
 			$config_template = $this->__createDefaultConfigFile();
 
 			// Write the install files
-			if(FALSE !== @file_put_contents(DOCROOT . '/install/includes/install.sql', $sql_schema));
+			if(false !== @file_put_contents(DOCROOT . '/install/includes/install.sql', $sql_schema));
 			else {
 				Administration::instance()->Page->pageAlert(__('An error occurred while trying to write the <code>install.sql</code> file. Check the file permissions.'), Alert::ERROR);
 				return;
 			}
-			if(FALSE !== @file_put_contents(DOCROOT . '/install/includes/config_default.php', $config_template));
+			if(false !== @file_put_contents(DOCROOT . '/install/includes/config_default.php', $config_template));
 			else {
 				Administration::instance()->Page->pageAlert(__('An error occurred while trying to write the <code>config_default.php</code> file. Check the file permissions.'), Alert::ERROR);
 				return;
 			}
-			if(FALSE !== @file_put_contents(DOCROOT . '/workspace/install.sql', $sql_data));
+			if(false !== @file_put_contents(DOCROOT . '/workspace/install.sql', $sql_data));
 			else {
 				Administration::instance()->Page->pageAlert(__('An error occurred while trying to write the <code>workspace/install.sql</code> file. Check the file permissions.'), Alert::ERROR);
 				return;
@@ -209,7 +209,7 @@
 
 		private function __dumpSchema($dump, $structure_tables, $tbl_prefix){
 			// Create variables for the dump files
-			$sql_schema = NULL;
+			$sql_schema = null;
 
 			// Grab the schema
 			foreach($structure_tables as $t) $sql_schema .= $dump->export($t, MySQLDump::STRUCTURE_ONLY);
@@ -221,14 +221,14 @@
 			);
 
 			// Remove any AUTO_INCREMENT counts
-			$sql_schema = preg_replace('/AUTO_INCREMENT=\d+/i', NULL, $sql_schema);
+			$sql_schema = preg_replace('/AUTO_INCREMENT=\d+/i', null, $sql_schema);
 
 			return $sql_schema;
 		}
 
 		private function __dumpData($dump, $data_tables, $tbl_prefix){
 			// Create variables for the dump files
-			$sql_data = NULL;
+			$sql_data = null;
 
 			// Field data and entry data schemas needs to be apart of the workspace sql dump
 			$sql_data  = $dump->export('tbl_fields_%', MySQLDump::ALL);
@@ -280,7 +280,7 @@
 				$archive = new ZipArchive;
 				$res = $archive->open(TMP . '/ensemble.tmp.zip', ZipArchive::CREATE);
 
-				if ($res === TRUE) {
+				if ($res === true) {
 					$this->__addFolderToArchive($archive, 'extensions', DOCROOT);
 					$this->__addFolderToArchive($archive, 'symphony', DOCROOT);
 					$this->__addFolderToArchive($archive, 'workspace', DOCROOT);
@@ -329,7 +329,7 @@
 			}
 		}
 
-		private function __addFolderToArchive(&$archive, $path, $parent=NULL){
+		private function __addFolderToArchive(&$archive, $path, $parent = null){
 			$iterator = new DirectoryIterator($path);
 			foreach($iterator as $file){
 				if($file->isDot() || preg_match('/^\./', $file->getFilename())) continue;
@@ -338,7 +338,7 @@
 					$this->__addFolderToArchive($archive, $file->getPathname(), $parent);
 				}
 
-				else $archive->addFile($file->getPathname(), ltrim(str_replace($parent, NULL, $file->getPathname()), '/'));
+				else $archive->addFile($file->getPathname(), ltrim(str_replace($parent, null, $file->getPathname()), '/'));
 			}
 		}
 	}
